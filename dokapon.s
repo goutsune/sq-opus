@@ -2442,7 +2442,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 18b4: d5 55 02  mov   TRACK_STATE+x,a
 18b7: e4 00     mov   a,$00
 18b9: 5f c1 18  jmp   $18c1
-18bc: 3f a8 1b  call  $1ba8
+18bc: 3f a8 1b  call  JumpTableDispatch_1bb1
 18bf: c4 00     mov   $00,a
 18c1: 5c        lsr   a
 18c2: 9f        xcn   a
@@ -2584,7 +2584,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 19be: 6f        ret
 
 19bf: ce        pop   x
-19c0: 3f a8 1b  call  $1ba8
+19c0: 3f a8 1b  call  JumpTableDispatch_1bb1
 19c3: c4 04     mov   $04,a
 19c5: f5 35 02  mov   a,TRACK_NUM+x
 19c8: 5d        mov   x,a
@@ -2593,7 +2593,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 19ce: 6f        ret
 
 19cf: ce        pop   x
-19d0: 3f a8 1b  call  $1ba8
+19d0: 3f a8 1b  call  JumpTableDispatch_1bb1
 19d3: c4 04     mov   $04,a
 19d5: f5 35 02  mov   a,TRACK_NUM+x
 19d8: 5d        mov   x,a
@@ -2657,7 +2657,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1a35: 6f        ret
 
 1a36: ce        pop   x
-1a37: 3f a8 1b  call  $1ba8
+1a37: 3f a8 1b  call  JumpTableDispatch_1bb1
 1a3a: c4 04     mov   $04,a
 1a3c: f5 35 02  mov   a,TRACK_NUM+x
 1a3f: 5d        mov   x,a
@@ -2666,7 +2666,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1a45: 6f        ret
 
 1a46: ce        pop   x
-1a47: 3f a8 1b  call  $1ba8
+1a47: 3f a8 1b  call  JumpTableDispatch_1bb1
 1a4a: c4 04     mov   $04,a
 1a4c: f5 35 02  mov   a,TRACK_NUM+x
 1a4f: 5d        mov   x,a
@@ -2675,7 +2675,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1a55: 6f        ret
 
 1a56: ce        pop   x
-1a57: 3f a8 1b  call  $1ba8
+1a57: 3f a8 1b  call  JumpTableDispatch_1bb1
 1a5a: c4 04     mov   $04,a
 1a5c: f5 35 02  mov   a,TRACK_NUM+x
 1a5f: 5d        mov   x,a
@@ -2684,7 +2684,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1a65: 6f        ret
 
 1a66: ce        pop   x
-1a67: 3f a8 1b  call  $1ba8
+1a67: 3f a8 1b  call  JumpTableDispatch_1bb1
 1a6a: c4 04     mov   $04,a
 1a6c: f5 35 02  mov   a,TRACK_NUM+x
 1a6f: 5d        mov   x,a
@@ -2703,7 +2703,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1a8b: 6f        ret
 
 1a8c: ce        pop   x
-1a8d: 3f a8 1b  call  $1ba8
+1a8d: 3f a8 1b  call  JumpTableDispatch_1bb1
 1a90: c4 04     mov   $04,a
 1a92: f5 35 02  mov   a,TRACK_NUM+x
 1a95: 5d        mov   x,a
@@ -2764,7 +2764,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1b04: 6f        ret
 
 1b05: ce        pop   x
-1b06: 3f a8 1b  call  $1ba8
+1b06: 3f a8 1b  call  JumpTableDispatch_1bb1
 1b09: c4 02     mov   $02,a
 1b0b: f5 35 02  mov   a,TRACK_NUM+x
 1b0e: 5d        mov   x,a
@@ -2773,7 +2773,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1b14: 6f        ret
 
 1b15: ce        pop   x
-1b16: 3f a8 1b  call  $1ba8
+1b16: 3f a8 1b  call  JumpTableDispatch_1bb1
 1b19: c5 03 02  mov   $0203,a
 1b1c: 6f        ret
 
@@ -2788,12 +2788,12 @@ ResetTrack:  ; How do we get here?
 1b28: 6f        ret
 
 1b29: ce        pop   x
-1b2a: 3f a8 1b  call  $1ba8
+1b2a: 3f a8 1b  call  JumpTableDispatch_1bb1
 1b2d: d5 35 02  mov   TRACK_NUM+x,a
 1b30: 6f        ret
 
 1b31: ce        pop   x
-1b32: 3f a8 1b  call  $1ba8
+1b32: 3f a8 1b  call  JumpTableDispatch_1bb1
 1b35: d5 85 02  mov   TRACK_NOTE+x,a
 1b38: c4 02     mov   $02,a
 1b3a: f5 35 02  mov   a,TRACK_NUM+x
@@ -2807,7 +2807,7 @@ ResetTrack:  ; How do we get here?
 1b4c: 6f        ret
 
 1b4d: ce        pop   x
-1b4e: 3f a8 1b  call  $1ba8
+1b4e: 3f a8 1b  call  JumpTableDispatch_1bb1
 1b51: d5 85 02  mov   TRACK_NOTE+x,a
 1b54: c4 02     mov   $02,a
 1b56: f5 35 02  mov   a,TRACK_NUM+x
@@ -2816,7 +2816,7 @@ ResetTrack:  ; How do we get here?
 1b5e: 6f        ret
 
 1b5f: ce        pop   x
-1b60: 3f a8 1b  call  $1ba8
+1b60: 3f a8 1b  call  JumpTableDispatch_1bb1
 1b63: d5 85 02  mov   TRACK_NOTE+x,a
 1b66: f5 75 02  mov   a,NOTE_LEN+x
 1b69: d5 25 02  mov   TRACK_TICKS+x,a
@@ -2825,7 +2825,7 @@ ResetTrack:  ; How do we get here?
 1b71: 6f        ret
 
 1b72: ce        pop   x
-1b73: 3f a8 1b  call  $1ba8
+1b73: 3f a8 1b  call  JumpTableDispatch_1bb1
 1b76: d5 95 02  mov   $0295+x,a
 1b79: f5 75 02  mov   a,NOTE_LEN+x
 1b7c: d5 25 02  mov   TRACK_TICKS+x,a
@@ -2837,7 +2837,7 @@ ResetTrack:  ; How do we get here?
 1b86: 6f        ret
 
 1b87: ce        pop   x
-1b88: 3f a8 1b  call  $1ba8
+1b88: 3f a8 1b  call  JumpTableDispatch_1bb1
 1b8b: d5 95 02  mov   $0295+x,a
 1b8e: 08 80     or    a,#$80
 1b90: 2d        push  a
@@ -2857,7 +2857,7 @@ ResetTrack:  ; How do we get here?
 1ba4: d5 65 02  mov   TRACK_INST+x,a
 1ba7: 6f        ret
 
-JUMPTBL_1BB1:
+JumpTableDispatch_1bb1:
 1ba8: 40        setp
 1ba9: f4 06     mov   a,$06+x   ; $106
 1bab: 4d        push  x
@@ -2873,7 +2873,7 @@ JUMPTBL_1BB1:
 
 1bbb: ce        pop   x
 1bbc: 3f dd 1b  call  $1bdd
-1bbf: 5f a8 1b  jmp   $1ba8
+1bbf: 5f a8 1b  jmp   JumpTableDispatch_1bb1
 
 1bc2: ce        pop   x
 1bc3: 3f fc 1b  call  $1bfc
@@ -2881,7 +2881,7 @@ JUMPTBL_1BB1:
 
 1bc9: ce        pop   x
 1bca: 3f 08 1c  call  $1c08
-1bcd: 5f a8 1b  jmp   $1ba8
+1bcd: 5f a8 1b  jmp   JumpTableDispatch_1bb1
 
 1bd0: ce        pop   x
 1bd1: 3f 2c 1c  call  $1c2c
