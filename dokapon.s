@@ -17,9 +17,18 @@ HW_COUNTER0 = $fd
 HW_COUNTER1 = $fe
 HW_COUNTER2 = $ff
 
-
+; Channel Registers
+;x0	VOL (L)	Left channel volume.
+;x1	VOL (R)	Right channel volume.
+;x2	P (L)	Lower 8 bits of pitch.
+;x3	P (H)	Higher 8-bits of pitch.
+;x4	SRCN
+;x5	ADSR (1)
+;x6	ADSR (2)
+;x7	GAIN
+;x8	-ENVX
+;x9	-OUTX
 ; Global DSP Registers
-
 DSP_MVOLL   = $0c
 DSP_MVOLR   = $1c
 DSP_EVOLL   = $2c
@@ -229,15 +238,16 @@ NOTE_NUM     = $0285
 0952: 9f        xcn   a
 0953: 2d        push  a
 0954: 08 07     or    a,#$07
-0956: c4 f2     mov   $f2,a
+0956: c4 f2     mov   DSP_ADDR,a
 0958: 8f 9e f3  mov   DSP_DATA,#$9e
 095b: ae        pop   a
 095c: 08 05     or    a,#$05
-095e: c4 f2     mov   $f2,a
+095e: c4 f2     mov   DSP_ADDR,a
 0960: 8f 00 f3  mov   DSP_DATA,#$00
 0963: 1d        dec   x
 0964: 10 eb     bpl   $0951
 0966: 6f        ret
+
 0967: 2d        push  a
 0968: 3f 11 09  call  $0911
 096b: 3f 6a 1e  call  $1e6a
@@ -310,8 +320,9 @@ NOTE_NUM     = $0285
 09fe: c5 04 02  mov   $0204,a
 0a01: c5 03 02  mov   $0203,a
 0a04: 6f        ret
+
 0a05: fa fe 6b  mov   ($6b),($fe)
-0a08: e4 fd     mov   a,$fd
+0a08: e4 fd     mov   a,HW_COUNTER0
 0a0a: f0 62     beq   $0a6e
 0a0c: ab 63     inc   $63
 0a0e: 60        clrc
@@ -407,7 +418,7 @@ NOTE_NUM     = $0285
 0ac1: 7d        mov   a,x
 0ac2: 9f        xcn   a
 0ac3: 08 08     or    a,#$08
-0ac5: c4 f2     mov   $f2,a
+0ac5: c4 f2     mov   DSP_ADDR,a
 0ac7: e4 f3     mov   a,DSP_DATA
 0ac9: 68 02     cmp   a,#$02
 0acb: 90 0b     bcc   $0ad8
@@ -512,41 +523,43 @@ NOTE_NUM     = $0285
 0b80: cf        mul   ya
 0b81: e8 00     mov   a,#$00
 0b83: 04 02     or    a,$02
-0b85: da f2     movw  $f2,ya
+0b85: da f2     movw  DSP_ADDR,ya
 0b87: e4 05     mov   a,$05
 0b89: eb 0c     mov   y,$0c
 0b8b: cf        mul   ya
-0b8c: ab f2     inc   $f2
+0b8c: ab f2     inc   DSP_ADDR
 0b8e: cb f3     mov   DSP_DATA,y
 0b90: f8 0d     mov   x,$0d
-0b92: ab f2     inc   $f2
+0b92: ab f2     inc   DSP_ADDR
 0b94: fa 00 f3  mov   ($f3),($00)
-0b97: ab f2     inc   $f2
+0b97: ab f2     inc   DSP_ADDR
 0b99: fa 01 f3  mov   ($f3),($01)
 0b9c: ae        pop   a
 0b9d: 24 3c     and   a,$3c
 0b9f: d0 01     bne   $0ba2
 0ba1: 6f        ret
-0ba2: ab f2     inc   $f2
+
+0ba2: ab f2     inc   DSP_ADDR
 0ba4: 8d 0c     mov   y,#$0c
 0ba6: f7 61     mov   a,($61)+y
 0ba8: 5d        mov   x,a
 0ba9: f5 40 e0  mov   a,$e040+x
 0bac: c4 f3     mov   DSP_DATA,a
 0bae: f8 0d     mov   x,$0d
-0bb0: ab f2     inc   $f2
+0bb0: ab f2     inc   DSP_ADDR
 0bb2: 8d 05     mov   y,#$05
 0bb4: f7 61     mov   a,($61)+y
 0bb6: c4 f3     mov   DSP_DATA,a
-0bb8: ab f2     inc   $f2
+0bb8: ab f2     inc   DSP_ADDR
 0bba: 8d 04     mov   y,#$04
 0bbc: f7 61     mov   a,($61)+y
 0bbe: c4 f3     mov   DSP_DATA,a
-0bc0: ab f2     inc   $f2
+0bc0: ab f2     inc   DSP_ADDR
 0bc2: 8d 06     mov   y,#$06
 0bc4: f7 61     mov   a,($61)+y
 0bc6: c4 f3     mov   DSP_DATA,a
 0bc8: 6f        ret
+
 0bc9: 00        nop
 0bca: 40        setp
 0bcb: 62 84     set3  $84
@@ -818,19 +831,19 @@ NOTE_NUM     = $0285
 0dbf: 7d        mov   a,x
 0dc0: 9f        xcn   a
 0dc1: 08 07     or    a,#$07
-0dc3: c4 f2     mov   $f2,a
+0dc3: c4 f2     mov   DSP_ADDR,a
 0dc5: 8f 9e f3  mov   DSP_DATA,#$9e
 0dc8: 1d        dec   x
 0dc9: 10 f0     bpl   $0dbb
 0dcb: 6f        ret
-0dcc: 8f 4d f2  mov   $f2,#$4d
-0dcf: fa 33 f3  mov   ($f3),($33)
 
+0dcc: 8f 4d f2  mov   DSP_ADDR,#DSP_EON
+0dcf: fa 33 f3  mov   (DSP_DATA),($33)
 0dd2: e4 40     mov   a,$40
 0dd4: 48 ff     eor   a,#$ff
 0dd6: 24 3e     and   a,$3e
-0dd8: 8d 4c     mov   y,#$4c
-0dda: 3f 1d 20  call  $201d
+0dd8: 8d 4c     mov   y,#DSP_KON
+0dda: 3f 1d 20  call  SetDSPReg ;y=KON
 0ddd: e4 3f     mov   a,$3f
 0ddf: 48 ff     eor   a,#$ff
 0de1: 24 3d     and   a,$3d
@@ -1011,7 +1024,7 @@ NOTE_NUM     = $0285
 
 0f2a: 2d        push  a
 0f2b: 4d        push  x
-0f2c: 8f 09 f2  mov   $f2,#$09
+0f2c: 8f 09 f2  mov   DSP_ADDR,#$09
 0f2f: e4 6c     mov   a,$6c
 0f31: 84 f3     adc   a,DSP_DATA
 0f33: c4 6c     mov   $6c,a
@@ -1312,7 +1325,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 
 1126: e8 02     mov   a,#$02
 1128: 04 00     or    a,$00
-112a: c4 f2     mov   $f2,a
+112a: c4 f2     mov   DSP_ADDR,a
 112c: f7 02     mov   a,($02)+y
 112e: fc        inc   y
 112f: 60        clrc
@@ -1325,7 +1338,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 113c: d5 9f 04  mov   $049f+x,a
 113f: d5 af 04  mov   $04af+x,a
 1142: c4 f3     mov   DSP_DATA,a
-1144: ab f2     inc   $f2
+1144: ab f2     inc   DSP_ADDR
 1146: e4 04     mov   a,$04
 1148: d5 a7 04  mov   $04a7+x,a
 114b: d5 b7 04  mov   $04b7+x,a
@@ -1334,7 +1347,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 
 1153: e8 03     mov   a,#$03
 1155: 04 00     or    a,$00
-1157: c4 f2     mov   $f2,a
+1157: c4 f2     mov   DSP_ADDR,a
 1159: f7 02     mov   a,($02)+y
 115b: fc        inc   y
 115c: 60        clrc
@@ -1354,14 +1367,14 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1179: d5 a7 04  mov   $04a7+x,a
 117c: d5 b7 04  mov   $04b7+x,a
 117f: c4 f3     mov   DSP_DATA,a
-1181: 8b f2     dec   $f2
+1181: 8b f2     dec   DSP_ADDR
 1183: ae        pop   a
 1184: c4 f3     mov   DSP_DATA,a
 1186: 5f 4f 0f  jmp   $0f4f
 
 1189: e8 03     mov   a,#$03
 118b: 04 00     or    a,$00
-118d: c4 f2     mov   $f2,a
+118d: c4 f2     mov   DSP_ADDR,a
 118f: f7 02     mov   a,($02)+y
 1191: fc        inc   y
 1192: 60        clrc
@@ -1380,7 +1393,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 11ac: d5 b7 04  mov   $04b7+x,a
 11af: c4 f3     mov   DSP_DATA,a
 11b1: ae        pop   a
-11b2: 8b f2     dec   $f2
+11b2: 8b f2     dec   DSP_ADDR
 11b4: c4 f3     mov   DSP_DATA,a
 11b6: 5f 4f 0f  jmp   $0f4f
 
@@ -1476,7 +1489,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1269: 60        clrc
 126a: 84 12     adc   a,$12
 126c: 5d        mov   x,a
-126d: 8f 6c f2  mov   $f2,#$6c
+126d: 8f 6c f2  mov   DSP_ADDR,#DSP_FLG
 1270: e4 f3     mov   a,DSP_DATA
 1272: 28 e0     and   a,#$e0
 1274: c4 04     mov   $04,a
@@ -1488,7 +1501,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1280: 5f 4f 0f  jmp   $0f4f
 
 1283: ce        pop   x
-1284: 8f 6c f2  mov   $f2,#$6c
+1284: 8f 6c f2  mov   DSP_ADDR,#DSP_FLG
 1287: e4 f3     mov   a,DSP_DATA
 1289: 28 e0     and   a,#$e0
 128b: 17 02     or    a,($02)+y
@@ -1499,13 +1512,13 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1293: ce        pop   x
 1294: e8 02     mov   a,#$02
 1296: 04 00     or    a,$00
-1298: c4 f2     mov   $f2,a
+1298: c4 f2     mov   DSP_ADDR,a
 129a: f7 02     mov   a,($02)+y
 129c: fc        inc   y
 129d: d5 9f 04  mov   $049f+x,a
 12a0: d5 af 04  mov   $04af+x,a
 12a3: c4 f3     mov   DSP_DATA,a
-12a5: ab f2     inc   $f2
+12a5: ab f2     inc   DSP_ADDR
 12a7: f7 02     mov   a,($02)+y
 12a9: fc        inc   y
 12aa: d5 a7 04  mov   $04a7+x,a
@@ -1516,7 +1529,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 12b5: ce        pop   x
 12b6: e8 03     mov   a,#$03
 12b8: 04 00     or    a,$00
-12ba: c4 f2     mov   $f2,a
+12ba: c4 f2     mov   DSP_ADDR,a
 12bc: f7 02     mov   a,($02)+y
 12be: fc        inc   y
 12bf: 60        clrc
@@ -1530,7 +1543,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 12d2: d5 b7 04  mov   $04b7+x,a
 12d5: fc        inc   y
 12d6: c4 f3     mov   DSP_DATA,a
-12d8: 8b f2     dec   $f2
+12d8: 8b f2     dec   DSP_ADDR
 12da: ae        pop   a
 12db: c4 f3     mov   DSP_DATA,a
 12dd: 5f 4f 0f  jmp   $0f4f
@@ -1538,7 +1551,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 12e0: ce        pop   x
 12e1: e8 03     mov   a,#$03
 12e3: 04 00     or    a,$00
-12e5: c4 f2     mov   $f2,a
+12e5: c4 f2     mov   DSP_ADDR,a
 12e7: f7 02     mov   a,($02)+y
 12e9: fc        inc   y
 12ea: 60        clrc
@@ -1551,7 +1564,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 12fa: c4 f3     mov   DSP_DATA,a
 12fc: fc        inc   y
 12fd: ae        pop   a
-12fe: 8b f2     dec   $f2
+12fe: 8b f2     dec   DSP_ADDR
 1300: c4 f3     mov   DSP_DATA,a
 1302: 5f 4f 0f  jmp   $0f4f
 
@@ -1675,7 +1688,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 13e0: 95 cf 04  adc   a,$04cf+x
 13e3: d5 cf 04  mov   $04cf+x,a
 13e6: c4 06     mov   $06,a
-13e8: ab f2     inc   $f2
+13e8: ab f2     inc   DSP_ADDR
 13ea: f7 02     mov   a,($02)+y
 13ec: fc        inc   y
 13ed: 60        clrc
@@ -1688,11 +1701,11 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 13fc: ce        pop   x
 13fd: e8 06     mov   a,#$06
 13ff: 04 00     or    a,$00
-1401: c4 f2     mov   $f2,a
+1401: c4 f2     mov   DSP_ADDR,a
 1403: f7 02     mov   a,($02)+y
 1405: fc        inc   y
 1406: c4 f3     mov   DSP_DATA,a
-1408: 8b f2     dec   $f2
+1408: 8b f2     dec   DSP_ADDR
 140a: f7 02     mov   a,($02)+y
 140c: fc        inc   y
 140d: c4 f3     mov   DSP_DATA,a
@@ -1701,7 +1714,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1412: ce        pop   x
 1413: e8 07     mov   a,#$07
 1415: 04 00     or    a,$00
-1417: c4 f2     mov   $f2,a
+1417: c4 f2     mov   DSP_ADDR,a
 1419: f7 02     mov   a,($02)+y
 141b: fc        inc   y
 141c: c4 f3     mov   DSP_DATA,a
@@ -1710,7 +1723,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1421: ce        pop   x
 1422: e8 04     mov   a,#$04
 1424: 04 00     or    a,$00
-1426: c4 f2     mov   $f2,a
+1426: c4 f2     mov   DSP_ADDR,a
 1428: e4 12     mov   a,$12
 142a: 2d        push  a
 142b: f7 02     mov   a,($02)+y
@@ -1728,7 +1741,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1440: 5f 4f 0f  jmp   $0f4f
 
 1443: ce        pop   x
-1444: 8f 2d f2  mov   $f2,#$2d
+1444: 8f 2d f2  mov   DSP_ADDR,#$2d
 1447: f5 6a 21  mov   a,$216a+x
 144a: 04 f3     or    a,DSP_DATA
 144c: c4 f3     mov   DSP_DATA,a
@@ -1751,14 +1764,14 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 146a: 7d        mov   a,x
 146b: 9f        xcn   a
 146c: 08 05     or    a,#$05
-146e: c4 f2     mov   $f2,a
+146e: c4 f2     mov   DSP_ADDR,a
 1470: 8f 00 f3  mov   DSP_DATA,#$00
 1473: 5f 4f 0f  jmp   $0f4f
 
 1476: ce        pop   x
 1477: f7 02     mov   a,($02)+y
 1479: fc        inc   y
-147a: c4 f2     mov   $f2,a
+147a: c4 f2     mov   DSP_ADDR,a
 147c: f7 02     mov   a,($02)+y
 147e: fc        inc   y
 147f: c4 f3     mov   DSP_DATA,a
@@ -1767,7 +1780,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1484: ce        pop   x
 1485: f7 02     mov   a,($02)+y
 1487: fc        inc   y
-1488: c4 f2     mov   $f2,a
+1488: c4 f2     mov   DSP_ADDR,a
 148a: f7 02     mov   a,($02)+y
 148c: fc        inc   y
 148d: 60        clrc
@@ -1795,14 +1808,14 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 14b7: 5f 4f 0f  jmp   $0f4f
 
 14ba: ce        pop   x
-14bb: 8f 3d f2  mov   $f2,#$3d
+14bb: 8f 3d f2  mov   DSP_ADDR,#$3d
 14be: f5 6a 21  mov   a,$216a+x
 14c1: 04 f3     or    a,DSP_DATA
 14c3: c4 f3     mov   DSP_DATA,a
 14c5: 5f 4f 0f  jmp   $0f4f
 
 14c8: ce        pop   x
-14c9: 8f 3d f2  mov   $f2,#$3d
+14c9: 8f 3d f2  mov   DSP_ADDR,#$3d
 14cc: f5 6a 21  mov   a,$216a+x
 14cf: 48 ff     eor   a,#$ff
 14d1: 24 f3     and   a,DSP_DATA
@@ -2300,6 +2313,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 17f8: ae        pop   a
 17f9: ce        pop   x
 17fa: 5f 78 10  jmp   $1078
+
 17fd: f7 02     mov   a,($02)+y
 17ff: fc        inc   y
 1800: 60        clrc
@@ -2342,14 +2356,14 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1842: ae        pop   a
 1843: 6f        ret
 
-1844: 8f 2d f2  mov   $f2,#$2d
+1844: 8f 2d f2  mov   DSP_ADDR,#$2d
 1847: f5 6a 21  mov   a,$216a+x
 184a: 48 ff     eor   a,#$ff
 184c: 2d        push  a
 184d: 24 f3     and   a,DSP_DATA
 184f: c4 f3     mov   DSP_DATA,a
 1851: ae        pop   a
-1852: 8f 3d f2  mov   $f2,#$3d
+1852: 8f 3d f2  mov   DSP_ADDR,#$3d
 1855: 24 f3     and   a,DSP_DATA
 1857: c4 f3     mov   DSP_DATA,a
 1859: 6f        ret
@@ -2395,9 +2409,9 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1899: cb 07     mov   $07,y
 189b: e8 00     mov   a,#$00
 189d: 04 00     or    a,$00
-189f: c4 f2     mov   $f2,a
+189f: c4 f2     mov   DSP_ADDR,a
 18a1: fa 06 f3  mov   ($f3),($06)
-18a4: ab f2     inc   $f2
+18a4: ab f2     inc   DSP_ADDR
 18a6: fa 07 f3  mov   ($f3),($07)
 18a9: ee        pop   y
 18aa: 6f        ret
@@ -3182,15 +3196,15 @@ JUMPTBL_1BB1:
 1e3a: 7d        mov   a,x
 1e3b: 9f        xcn   a
 1e3c: 08 05     or    a,#$05
-1e3e: c4 f2     mov   $f2,a
-1e40: 8f 00 f3  mov   $f3,#$00
+1e3e: c4 f2     mov   DSP_ADDR,a
+1e40: 8f 00 f3  mov   DSP_DATA,#$00
 1e43: 1d        dec   x
 1e44: 10 e7     bpl   $1e2d
 1e46: ae        pop   a
 1e47: 6f        ret
 
-1e48: 3f ba 1f  call  $1fba  ; From $083e
-1e4b: 3f a1 1f  call  $1fa1
+1e48: 3f ba 1f  call  DSPInit  ; From $083e
+1e4b: 3f a1 1f  call  DSPTimerInit
 1e4e: 3f 6a 1e  call  $1e6a
 1e51: 3f 55 1e  call  $1e55
 1e54: 6f        ret
@@ -3210,9 +3224,12 @@ JUMPTBL_1BB1:
 1e66: 10 f0     bpl   $1e58
 1e68: 20        clrp
 1e69: 6f        ret
+
+Init2AFto36F
 1e6a: 8f 00 33  mov   $33,#$00
-1e6d: cd 0f     mov   x,#$0f
-1e6f: e8 40     mov   a,#$40
+1e6d: cd 0f     mov   x,#$0f ; 16 times
+
+1e6f: e8 40     mov   a,#$40 ; loop
 1e71: d5 1f 03  mov   $031f+x,a
 1e74: e8 7f     mov   a,#$7f
 1e76: d5 ef 02  mov   $02ef+x,a
@@ -3238,46 +3255,47 @@ JUMPTBL_1BB1:
 1ea4: e5 a5 02  mov   a,$02a5
 1ea7: d0 47     bne   $1ef0
 1ea9: ac a5 02  inc   $02a5
-1eac: 8f 7d f2  mov   $f2,#$7d
-1eaf: e4 f3     mov   a,$f3
+1eac: 8f 7d f2  mov   DSP_ADDR,#$7d
+1eaf: e4 f3     mov   a,DSP_DATA
 1eb1: 5c        lsr   a
 1eb2: 60        clrc
-1eb3: 84 f3     adc   a,$f3
+1eb3: 84 f3     adc   a,DSP_DATA
 1eb5: 28 1f     and   a,#$1f
 1eb7: 48 ff     eor   a,#$ff
 1eb9: c5 a6 02  mov   $02a6,a
 1ebc: e8 00     mov   a,#$00
-1ebe: 8f 2c f2  mov   $f2,#$2c
-1ec1: c4 f3     mov   $f3,a
-1ec3: 8f 3c f2  mov   $f2,#$3c
-1ec6: c4 f3     mov   $f3,a
-1ec8: 8f 4d f2  mov   $f2,#$4d
-1ecb: c4 f3     mov   $f3,a
-1ecd: 8f 0d f2  mov   $f2,#$0d
-1ed0: c4 f3     mov   $f3,a
-1ed2: 8f 6c f2  mov   $f2,#$6c
-1ed5: 8f 20 f3  mov   $f3,#$20
-1ed8: 8f 7d f2  mov   $f2,#$7d
+1ebe: 8f 2c f2  mov   DSP_ADDR,#DSP_EVOLL
+1ec1: c4 f3     mov   DSP_DATA,a
+1ec3: 8f 3c f2  mov   DSP_ADDR,#DSP_EVOLR
+1ec6: c4 f3     mov   DSP_DATA,a
+1ec8: 8f 4d f2  mov   DSP_ADDR,#DSP_EON
+1ecb: c4 f3     mov   DSP_DATA,a
+1ecd: 8f 0d f2  mov   DSP_ADDR,#$0d
+1ed0: c4 f3     mov   DSP_DATA,a
+1ed2: 8f 6c f2  mov   DSP_ADDR,#DSP_FLG
+1ed5: 8f 20 f3  mov   DSP_DATA,#$20
+1ed8: 8f 7d f2  mov   DSP_ADDR,#$7d
 1edb: e5 aa 02  mov   a,$02aa
 1ede: 28 0f     and   a,#$0f
-1ee0: c4 f3     mov   $f3,a
+1ee0: c4 f3     mov   DSP_DATA,a
 1ee2: 1c        asl   a
 1ee3: 1c        asl   a
 1ee4: 1c        asl   a
 1ee5: 48 ff     eor   a,#$ff
 1ee7: 80        setc
 1ee8: 88 f8     adc   a,#$f8
-1eea: 8f 6d f2  mov   $f2,#$6d
-1eed: c4 f3     mov   $f3,a
+1eea: 8f 6d f2  mov   DSP_ADDR,#DSP_ESA
+1eed: c4 f3     mov   DSP_DATA,a
 1eef: 6f        ret
+
 1ef0: 68 01     cmp   a,#$01
 1ef2: d0 21     bne   $1f15
 1ef4: ac a6 02  inc   $02a6
 1ef7: 30 36     bmi   $1f2f
 1ef9: ac a5 02  inc   $02a5
 1efc: 3f 59 1f  call  $1f59
-1eff: 8f 6c f2  mov   $f2,#$6c
-1f02: 8f 00 f3  mov   $f3,#$00
+1eff: 8f 6c f2  mov   DSP_ADDR,#DSP_FLG
+1f02: 8f 00 f3  mov   DSP_DATA,#$00
 1f05: e5 aa 02  mov   a,$02aa
 1f08: 5c        lsr   a
 1f09: 60        clrc
@@ -3303,18 +3321,18 @@ JUMPTBL_1BB1:
 1f33: 10 23     bpl   $1f58
 1f35: 28 7f     and   a,#$7f
 1f37: c5 a7 02  mov   $02a7,a
-1f3a: 8f 2c f2  mov   $f2,#$2c
+1f3a: 8f 2c f2  mov   DSP_ADDR,#DSP_EVOLL
 1f3d: c5 a7 02  mov   $02a7,a
-1f40: c4 f3     mov   $f3,a
-1f42: 8f 3c f2  mov   $f2,#$3c
+1f40: c4 f3     mov   DSP_DATA,a
+1f42: 8f 3c f2  mov   DSP_ADDR,#DSP_EVOLR
 1f45: e5 a8 02  mov   a,$02a8
 1f48: 28 7f     and   a,#$7f
 1f4a: c5 a8 02  mov   $02a8,a
-1f4d: c4 f3     mov   $f3,a
-1f4f: 8f 0d f2  mov   $f2,#$0d
+1f4d: c4 f3     mov   DSP_DATA,a
+1f4f: 8f 0d f2  mov   DSP_ADDR,#$0d
 1f52: e5 a9 02  mov   a,$02a9
 1f55: 1c        asl   a
-1f56: c4 f3     mov   $f3,a
+1f56: c4 f3     mov   DSP_DATA,a
 1f58: 6f        ret
 
 1f59: e5 ab 02  mov   a,$02ab
@@ -3327,31 +3345,31 @@ JUMPTBL_1BB1:
 1f64: 7d        mov   a,x
 1f65: 9f        xcn   a
 1f66: 08 0f     or    a,#$0f
-1f68: c4 f2     mov   $f2,a
+1f68: c4 f2     mov   DSP_ADDR,a
 1f6a: f6 4a 21  mov   a,$214a+y
-1f6d: c4 f3     mov   $f3,a
+1f6d: c4 f3     mov   DSP_DATA,a
 1f6f: dc        dec   y
 1f70: 1d        dec   x
 1f71: 10 f1     bpl   $1f64
 1f73: 6f        ret
 
 1f74: e8 00     mov   a,#$00
-1f76: 8f 2c f2  mov   $f2,#$2c
-1f79: c4 f3     mov   $f3,a
-1f7b: 8f 3c f2  mov   $f2,#$3c
-1f7e: c4 f3     mov   $f3,a
-1f80: 8f 6c f2  mov   $f2,#$6c
-1f83: 8f 20 f3  mov   $f3,#$20
-1f86: 8f 7d f2  mov   $f2,#$7d
-1f89: c4 f3     mov   $f3,a
-1f8b: 8f 6d f2  mov   $f2,#$6d
-1f8e: 8f f8 f3  mov   $f3,#$f8
-1f91: 8f 4d f2  mov   $f2,#$4d
-1f94: c4 f3     mov   $f3,a
-1f96: 8f 2d f2  mov   $f2,#$2d
-1f99: c4 f3     mov   $f3,a
-1f9b: 8f 3d f2  mov   $f2,#$3d
-1f9e: c4 f3     mov   $f3,a
+1f76: 8f 2c f2  mov   DSP_ADDR,#DSP_EVOLL
+1f79: c4 f3     mov   DSP_DATA,a
+1f7b: 8f 3c f2  mov   DSP_ADDR,#DSP_EVOLR
+1f7e: c4 f3     mov   DSP_DATA,a
+1f80: 8f 6c f2  mov   DSP_ADDR,#DSP_FLG
+1f83: 8f 20 f3  mov   DSP_DATA,#$20
+1f86: 8f 7d f2  mov   DSP_ADDR,#$7d
+1f89: c4 f3     mov   DSP_DATA,a
+1f8b: 8f 6d f2  mov   DSP_ADDR,#DSP_ESA
+1f8e: 8f f8 f3  mov   DSP_DATA,#$f8
+1f91: 8f 4d f2  mov   DSP_ADDR,#DSP_EON
+1f94: c4 f3     mov   DSP_DATA,a
+1f96: 8f 2d f2  mov   DSP_ADDR,#$2d
+1f99: c4 f3     mov   DSP_DATA,a
+1f9b: 8f 3d f2  mov   DSP_ADDR,#$3d
+1f9e: c4 f3     mov   DSP_DATA,a
 1fa0: 6f        ret
 
 DSPTimerInit:
@@ -3364,17 +3382,22 @@ DSPTimerInit:
 1fb3: 8f 00 f6  mov   PORT2,#$00
 1fb6: 8f 00 f7  mov   PORT3,#$00
 1fb9: 6f        ret
-1fba: 8f 6c f2  mov   $f2,#$6c
-1fbd: 8f e0 f3  mov   $f3,#$e0
-1fc0: 8f 5d f2  mov   DSP_ADDR,#$5d
+;    7     6     5     4     3     2     1     0
+; +-----+-----+-----+-----+-----+-----+-----+-----+
+;$|RESET|MUTE |~ECEN|         NOISE CLOCK         |
+; +-----+-----+-----+-----+-----+-----+-----+-----+
+DSPInit:
+1fba: 8f 6c f2  mov   DSP_ADDR,#DSP_FLG
+1fbd: 8f e0 f3  mov   DSP_DATA,#%11100000 ; ^- Flags
+1fc0: 8f 5d f2  mov   DSP_ADDR,#DSP_DIR
 1fc3: e8 25     mov   a,#$25
-1fc5: c4 f3     mov   $f3,a
+1fc5: c4 f3     mov   DSP_DATA,a  ; $2500 is SRC?
 1fc7: cd 26     mov   x,#$26
-1fc9: f5 f5 1f  mov   a,$1ff5+x
 
+1fc9: f5 f5 1f  mov   a,$1ff5+x   ; a,$201b
 1fcc: fd        mov   y,a
-1fcd: f5 f6 1f  mov   a,$1ff6+x
-1fd0: 3f 1d 20  call  $201d
+1fcd: f5 f6 1f  mov   a,$1ff6+x   ; a,$201c
+1fd0: 3f 1d 20  call  SetDSPReg  ; addr=$4f val=$00
 1fd3: 1d        dec   x
 1fd4: 1d        dec   x
 1fd5: 10 f2     bpl   $1fc9
@@ -3386,12 +3409,12 @@ DSPTimerInit:
 1fdd: d0 fc     bne   $1fdb
 1fdf: 1d        dec   x
 1fe0: d0 f7     bne   $1fd9
-1fe2: 8f 6c f2  mov   DSP_ADDR,#$6c
-1fe5: 8f 20 f3  mov   $f3,#$20
-1fe8: 8f 0c f2  mov   DSP_ADDR,#$0c
-1feb: 8f 60 f3  mov   $f3,#$60
-1fee: 8f 1c f2  mov   DSP_ADDR,#$1c
-1ff1: 8f 60 f3  mov   $f3,#$60
+1fe2: 8f 6c f2  mov   DSP_ADDR,#DSP_FLG
+1fe5: 8f 20 f3  mov   DSP_DATA,#$20
+1fe8: 8f 0c f2  mov   DSP_ADDR,#DSP_MVOLL
+1feb: 8f 60 f3  mov   DSP_DATA,#$60
+1fee: 8f 1c f2  mov   DSP_ADDR,#DSP_MVOLR
+1ff1: 8f 60 f3  mov   DSP_DATA,#$60
 1ff4: 6f        ret
 
 1ff5: $2d, $00
@@ -3417,10 +3440,11 @@ DSPTimerInit:
 
 SetDSPReg:
 201d: cb f2     mov   DSP_ADDR,y
-201f: c4 f3     mov   $f3,a
+201f: c4 f3     mov   DSP_DATA,a
 2021: 6f        ret
+
 2022: cb f2     mov   DSP_ADDR,y
-2024: e4 f3     mov   a,$f3
+2024: e4 f3     mov   a,DSP_DATA
 2026: 6f        ret
 
 2027: e8 00     mov   a,#$00
