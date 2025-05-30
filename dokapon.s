@@ -113,9 +113,11 @@ NOTE_NUM     = $0285
 0876: 08 80     or    a,#$80
 0878: c5 02 02  mov   $0202,a
 087b: 6f        ret
+
 087c: e5 00 02  mov   a,$0200
 087f: 30 01     bmi   $0882
 0881: 6f        ret
+
 0882: 28 7f     and   a,#$7f
 0884: c5 00 02  mov   $0200,a
 0887: 28 3f     and   a,#$3f
@@ -125,20 +127,22 @@ NOTE_NUM     = $0285
 088f: 1c        asl   a
 0890: 5d        mov   x,a
 0891: 1f 94 08  jmp   ($0894+x)
-0894: ce        pop   x
-0895: 08 ef     or    a,#$ef
-0897: 08 eb     or    a,#$eb
-0899: 08 e7     or    a,#$e7
-089b: 08 e3     or    a,#$e3
-089d: 08 f7     or    a,#PORT3
-089f: 08 f3     or    a,#DSP_DATA
-08a1: 08 fb     or    a,#$fb
-08a3: 08 04     or    a,#$04
-08a5: 09 3f c9  or    ($c9),($3f)
-08a8: 08 68     or    a,#$68
-08aa: ff        stop
+
+0894: $08ce
+0896: $08ef
+0898: $08eb
+089a: $08e7
+089c: $08e3
+089e: $08f7
+08a0: $08f3
+08a2: $08fb
+08a4: $0904
+
+08a6: 3f c9 08  call  $08c9
+08a9: 68 ff     cmp   a,#$ff
 08ab: d0 01     bne   $08ae
 08ad: 6f        ret
+
 08ae: 8f 00 17  mov   $17,#$00
 08b1: 2d        push  a
 08b2: c5 01 02  mov   $0201,a
@@ -151,9 +155,11 @@ NOTE_NUM     = $0285
 08c3: b0 03     bcs   $08c8
 08c5: 5f 67 09  jmp   $0967
 08c8: 6f        ret
+
 08c9: fd        mov   y,a
 08ca: f6 c0 de  mov   a,$dec0+y
 08cd: 6f        ret
+
 08ce: 3f 04 09  call  $0904
 08d1: 8f f0 f1  mov   $f1,#$f0
 08d4: 8f 00 f4  mov   PORT0,#$00
@@ -161,21 +167,29 @@ NOTE_NUM     = $0285
 08da: 8f 00 f6  mov   PORT2,#$00
 08dd: 8f 00 f7  mov   PORT3,#$00
 08e0: 5f c0 ff  jmp   $ffc0
+
 08e3: 8f fe 66  mov   $66,#$fe
 08e6: 6f        ret
+
 08e7: 8f 02 66  mov   $66,#$02
 08ea: 6f        ret
+
 08eb: 8f f0 68  mov   $68,#$f0
 08ee: 6f        ret
+
 08ef: 8f 03 68  mov   $68,#$03
 08f2: 6f        ret
+
 08f3: 8f 00 65  mov   $65,#$00
 08f6: 6f        ret
+
 08f7: 8f ff 65  mov   $65,#$ff
 08fa: 6f        ret
+
 08fb: 3f 04 09  call  $0904
 08fe: 3f 27 20  call  $2027
 0901: 5f 16 08  jmp   $0816
+
 0904: 3f 74 1f  call  $1f74
 0907: e8 00     mov   a,#$00
 0909: c5 01 02  mov   $0201,a
@@ -345,6 +359,7 @@ NOTE_NUM     = $0285
 0a6b: 3f 9c 1e  call  $1e9c
 0a6e: 3f 9d 0a  call  $0a9d
 0a71: 6f        ret
+
 0a72: f5 25 02  mov   a,$0225+x
 0a75: f0 06     beq   $0a7d
 0a77: 9c        dec   a
@@ -358,15 +373,18 @@ NOTE_NUM     = $0285
 0a87: f5 25 02  mov   a,$0225+x
 0a8a: f0 f1     beq   $0a7d
 0a8c: 6f        ret
+
 0a8d: e4 00     mov   a,$00
 0a8f: 68 a0     cmp   a,#$a0
 0a91: 90 01     bcc   $0a94
 0a93: 6f        ret
+
 0a94: 28 0f     and   a,#$0f
 0a96: 5d        mov   x,a
 0a97: e4 02     mov   a,$02
 0a99: 3f 1c 0e  call  $0e1c
 0a9c: 6f        ret
+
 0a9d: 3f a5 0d  call  $0da5
 0aa0: e4 3f     mov   a,$3f
 0aa2: 48 ff     eor   a,#$ff
@@ -416,6 +434,7 @@ NOTE_NUM     = $0285
 0af7: c4 33     mov   $33,a
 0af9: 3f cc 0d  call  $0dcc
 0afc: 6f        ret
+
 0afd: f4 51     mov   a,$51+x
 0aff: c4 61     mov   $61,a
 0b01: f4 59     mov   a,$59+x
@@ -429,6 +448,7 @@ NOTE_NUM     = $0285
 0b11: e4 12     mov   a,$12
 0b13: 10 01     bpl   $0b16
 0b15: 6f        ret
+
 0b16: 8d 01     mov   y,#$01
 0b18: f7 61     mov   a,($61)+y
 0b1a: c4 0c     mov   $0c,a
@@ -442,6 +462,7 @@ NOTE_NUM     = $0285
 0b2a: f7 61     mov   a,($61)+y
 0b2c: c4 11     mov   $11,a
 0b2e: 6f        ret
+
 0b2f: 3f d2 0b  call  $0bd2
 0b32: f5 6a 21  mov   a,$216a+x
 0b35: 2d        push  a
@@ -602,9 +623,11 @@ NOTE_NUM     = $0285
 0c4c: c4 01     mov   $01,a
 0c4e: ce        pop   x
 0c4f: 6f        ret
+
 0c50: e4 12     mov   a,$12
 0c52: 10 01     bpl   $0c55
 0c54: 6f        ret
+
 0c55: 7d        mov   a,x
 0c56: fd        mov   y,a
 0c57: f4 41     mov   a,$41+x
@@ -617,6 +640,7 @@ NOTE_NUM     = $0285
 0c64: 3f 6a 0c  call  $0c6a
 0c67: f8 15     mov   x,$15
 0c69: 6f        ret
+
 0c6a: f5 bf 02  mov   a,$02bf+x
 0c6d: bc        inc   a
 0c6e: 1c        asl   a
@@ -642,6 +666,7 @@ NOTE_NUM     = $0285
 0c92: dd        mov   a,y
 0c93: d5 cf 03  mov   $03cf+x,a
 0c96: 6f        ret
+
 0c97: e4 0c     mov   a,$0c
 0c99: d0 03     bne   $0c9e
 0c9b: 5f 21 0d  jmp   $0d21
@@ -707,6 +732,7 @@ NOTE_NUM     = $0285
 0d1c: d5 ef 03  mov   $03ef+x,a
 0d1f: ce        pop   x
 0d20: 6f        ret
+
 0d21: 4d        push  x
 0d22: f8 15     mov   x,$15
 0d24: e8 00     mov   a,#$00
@@ -714,6 +740,7 @@ NOTE_NUM     = $0285
 0d29: d5 ef 03  mov   $03ef+x,a
 0d2c: ce        pop   x
 0d2d: 6f        ret
+
 0d2e: e4 10     mov   a,$10
 0d30: f0 69     beq   $0d9b
 0d32: e4 6b     mov   a,$6b
@@ -766,12 +793,14 @@ NOTE_NUM     = $0285
 0d96: d5 ff 03  mov   $03ff+x,a
 0d99: ce        pop   x
 0d9a: 6f        ret
+
 0d9b: 4d        push  x
 0d9c: f8 15     mov   x,$15
 0d9e: e8 00     mov   a,#$00
 0da0: d5 ff 03  mov   $03ff+x,a
 0da3: ce        pop   x
 0da4: 6f        ret
+
 0da5: e4 30     mov   a,$30
 0da7: 48 ff     eor   a,#$ff
 0da9: 2d        push  a
@@ -796,6 +825,7 @@ NOTE_NUM     = $0285
 0dcb: 6f        ret
 0dcc: 8f 4d f2  mov   $f2,#$4d
 0dcf: fa 33 f3  mov   ($f3),($33)
+
 0dd2: e4 40     mov   a,$40
 0dd4: 48 ff     eor   a,#$ff
 0dd6: 24 3e     and   a,$3e
@@ -812,6 +842,7 @@ NOTE_NUM     = $0285
 0def: 8f 00 3f  mov   $3f,#$00
 0df2: 8f 00 32  mov   $32,#$00
 0df5: 6f        ret
+
 0df6: 28 7f     and   a,#$7f
 0df8: 3f 06 0e  call  $0e06
 0dfb: e4 12     mov   a,$12
@@ -819,6 +850,7 @@ NOTE_NUM     = $0285
 0e00: e4 13     mov   a,$13
 0e02: d5 af 03  mov   $03af+x,a
 0e05: 6f        ret
+
 0e06: fd        mov   y,a
 0e07: f6 c0 df  mov   a,$dfc0+y
 0e0a: 68 ff     cmp   a,#$ff
@@ -831,6 +863,7 @@ NOTE_NUM     = $0285
 0e16: f6 01 22  mov   a,$2201+y
 0e19: c4 13     mov   $13,a
 0e1b: 6f        ret
+
 0e1c: 2d        push  a
 0e1d: f5 9f 03  mov   a,$039f+x
 0e20: c4 0e     mov   $0e,a
@@ -868,11 +901,13 @@ NOTE_NUM     = $0285
 0e5f: 84 0f     adc   a,$0f
 0e61: d5 8f 03  mov   $038f+x,a
 0e64: 6f        ret
+
 0e65: e8 ff     mov   a,#$ff
 0e67: c4 06     mov   $06,a
 0e69: e5 02 02  mov   a,$0202
 0e6c: 30 01     bmi   $0e6f
 0e6e: 6f        ret
+
 0e6f: 28 7f     and   a,#$7f
 0e71: c5 02 02  mov   $0202,a
 0e74: fd        mov   y,a
@@ -880,9 +915,11 @@ NOTE_NUM     = $0285
 0e78: 68 ff     cmp   a,#$ff
 0e7a: d0 01     bne   $0e7d
 0e7c: 6f        ret
+
 0e7d: 65 ab a7  cmp   a,$a7ab
 0e80: 90 01     bcc   $0e83
 0e82: 6f        ret
+
 0e83: 1c        asl   a
 0e84: fd        mov   y,a
 0e85: f6 ac a7  mov   a,$a7ac+y
@@ -922,6 +959,7 @@ NOTE_NUM     = $0285
 0ec8: f0 03     beq   $0ecd
 0eca: 90 01     bcc   $0ecd
 0ecc: 6f        ret
+
 0ecd: dd        mov   a,y
 0ece: 5d        mov   x,a
 0ecf: e4 07     mov   a,$07
@@ -949,6 +987,7 @@ NOTE_NUM     = $0285
 0efd: d5 5f 05  mov   $055f+x,a
 0f00: 3f 44 18  call  $1844
 0f03: 6f        ret
+
 0f04: 60        clrc
 0f05: e4 68     mov   a,$68
 0f07: 30 08     bmi   $0f11
@@ -969,6 +1008,7 @@ NOTE_NUM     = $0285
 0f26: 1d        dec   x
 0f27: 10 f7     bpl   $0f20
 0f29: 6f        ret
+
 0f2a: 2d        push  a
 0f2b: 4d        push  x
 0f2c: 8f 09 f2  mov   $f2,#$09
@@ -990,6 +1030,8 @@ NOTE_NUM     = $0285
 0f48: f5 97 04  mov   a,$0497+x
 0f4b: c4 03     mov   $03,a
 0f4d: 8d 00     mov   y,#$00
+
+FetchCMD:  ; I assume this is VCMD fetch loop
 0f4f: dd        mov   a,y
 0f50: 8d 00     mov   y,#$00
 0f52: 7a 02     addw  ya,$02
@@ -1002,89 +1044,93 @@ NOTE_NUM     = $0285
 0f5e: 1c        asl   a
 0f5f: 5d        mov   x,a
 0f60: 1f 63 0f  jmp   ($0f63+x)
-0f63: 93 12 b5  bbc4  $12,$0f1b
-0f66: 12 e0     clr0  $e0
-0f68: 12 05     clr0  $05
-0f6a: 13 35 13  bbc0  $35,$0f80
-0f6d: 77 13     cmp   a,($13)+y
-0f6f: 99        adc   (x),(y)
-0f70: 13 b6 13  bbc0  $b6,$0f86
-0f73: db 13     mov   $13+x,y
-0f75: fc        inc   y
-0f76: 13 12 14  bbc0  $12,$0f8d
-0f79: 21        tcall 2
-0f7a: 14 43     or    a,$43+x
-0f7c: 14 51     or    a,$51+x
-0f7e: 14 62     or    a,$62+x
-0f80: 14 76     or    a,$76+x
-0f82: 14 84     or    a,$84+x
-0f84: 14 95     or    a,$95+x
-0f86: 14 1a     or    a,$1a+x
-0f88: 18 ba 14  or    $14,#$ba
-0f8b: d8 14     mov   $14,x
-0f8d: f3 14 18  bbc7  $14,$0fa8
-0f90: 15 3d 15  or    a,$153d+x
-0f93: 5b 15     lsr   $15+x
-0f95: 90 15     bcc   $0fac
-0f97: a5 15 bb  sbc   a,$bb15
-0f9a: 15 d1 15  or    a,$15d1+x
-0f9d: e7 15     mov   a,($15+x)
-0f9f: fb 15     mov   y,$15+x
-0fa1: 0f        brk
-0fa2: 16 25 16  or    a,$1625+y
-0fa5: 55 16 85  eor   a,$8516+x
-0fa8: 16 ae 16  or    a,$16ae+y
-0fab: ec 16 11  mov   y,$1116
-0fae: 17 36     or    a,($36)+y
-0fb0: 17 5b     or    a,($5b)+y
-0fb2: 17 6e     or    a,($6e)+y
-0fb4: 17 8a     or    a,($8a)+y
-0fb6: 17 9a     or    a,($9a)+y
-0fb8: 17 aa     or    a,($aa)+y
-0fba: 17 ba     or    a,($ba)+y
-0fbc: 17 ca     or    a,($ca)+y
-0fbe: 17 da     or    a,($da)+y
-0fc0: 17 ea     or    a,($ea)+y
-0fc2: 17 fd     or    a,($fd)+y
-0fc4: 17 83     or    a,($83)+y
-0fc6: 12 66     clr0  $66
-0fc8: 12 26     clr0  $26
-0fca: 11        tcall 1
-0fcb: 53 11 89  bbc2  $11,$0f57
-0fce: 11        tcall 1
-0fcf: b9        sbc   (x),(y)
-0fd0: 11        tcall 1
-0fd1: e1        tcall 14
-0fd2: 11        tcall 1
-0fd3: 11        tcall 1
-0fd4: 12 3b     clr0  $3b
-0fd6: 12 e8     clr0  $e8
-0fd8: 10 fc     bpl   $0fd6
-0fda: 10 d6     bpl   $0fb2
-0fdc: 10 bd     bpl   $0f9b
-0fde: 10 a3     bpl   $0f83
-0fe0: 10 89     bpl   $0f6b
-0fe2: 10 c8     bpl   $0fac
-0fe4: 14 10     or    a,$10+x
-0fe6: 11        tcall 1
-0fe7: 68 10     cmp   a,#$10
-0fe9: 4d        push  x
-0fea: 10 32     bpl   $101e
-0fec: 10 0b     bpl   $0ff9
-0fee: 10 f3     bpl   $0fe3
-0ff0: 0f        brk
-0ff1: fe 0f     dbnz  y,$1002
+
+0f63: $1293
+0f65: $12b5
+0f67: $12e0
+0f69: $1305
+0f6b: $1335
+0f6d: $1377
+0f6f: $1399
+0f71: $13b6
+0f73: $13db
+0f75: $13fc
+0f77: $1412
+0f79: $1421
+0f7b: $1443
+0f7d: $1451
+0f7f: $1462
+0f81: $1476
+0f83: $1484
+0f85: $1495
+0f87: $181a
+0f89: $14ba
+0f8b: $14d8
+0f8d: $14f3
+0f8f: $1518
+0f91: $153d
+0f93: $155b
+0f95: $1590
+0f97: $15a5
+0f99: $15bb
+0f9b: $15d1
+0f9d: $15e7
+0f9f: $15fb
+0fa1: $160f
+0fa3: $1625
+0fa5: $1655
+0fa7: $1685
+0fa9: $16ae
+0fab: $16ec
+0fad: $1711
+0faf: $1736
+0fb1: $175b
+0fb3: $176e
+0fb5: $178a
+0fb7: $179a
+0fb9: $17aa
+0fbb: $17ba
+0fbd: $17ca
+0fbf: $17da
+0fc1: $17ea
+0fc3: $17fd
+0fc5: $1283
+0fc7: $1266
+0fc9: $1126
+0fcb: $1153
+0fcd: $1189
+0fcf: $11b9
+0fd1: $11e1
+0fd3: $1211
+0fd5: $123b
+0fd7: $10e8
+0fd9: $10fc
+0fdb: $10d6
+0fdd: $10bd
+0fdf: $10a3
+0fe1: $1089
+0fe3: $14c8
+0fe5: $1110
+0fe7: $1068
+0fe9: $104d
+0feb: $1032
+0fed: $100b
+0fef: $0ff3
+0ff1: $0ffe
+
 0ff3: ce        pop   x
 0ff4: f5 6a 21  mov   a,$216a+x
 0ff7: 04 34     or    a,$34
 0ff9: c4 34     mov   $34,a
 0ffb: 5f 4f 0f  jmp   $0f4f
+
 0ffe: ce        pop   x
 0fff: f5 6a 21  mov   a,$216a+x
 1002: 48 ff     eor   a,#$ff
 1004: 24 34     and   a,$34
 1006: c4 34     mov   $34,a
 1008: 5f 4f 0f  jmp   $0f4f
+
 100b: f7 02     mov   a,($02)+y
 100d: fc        inc   y
 100e: 60        clrc
@@ -1100,6 +1146,7 @@ NOTE_NUM     = $0285
 101c: d5 77 05  mov   $0577+x,a
 101f: ae        pop   a
 1020: ce        pop   x
+
 1021: 28 83     and   a,#$83
 1023: c4 04     mov   $04,a
 1025: f5 6f 05  mov   a,$056f+x
@@ -1107,6 +1154,7 @@ NOTE_NUM     = $0285
 102a: 04 04     or    a,$04
 102c: d5 6f 05  mov   $056f+x,a
 102f: 5f 4f 0f  jmp   $0f4f
+
 1032: ce        pop   x
 1033: 4d        push  x
 1034: f5 6f 05  mov   a,$056f+x
@@ -1124,6 +1172,7 @@ NOTE_NUM     = $0285
 1048: ae        pop   a
 1049: ce        pop   x
 104a: 5f 21 10  jmp   $1021
+
 104d: ce        pop   x
 104e: 4d        push  x
 104f: f5 6f 05  mov   a,$056f+x
@@ -1141,6 +1190,7 @@ NOTE_NUM     = $0285
 1063: ae        pop   a
 1064: ce        pop   x
 1065: 5f 21 10  jmp   $1021
+
 1068: f7 02     mov   a,($02)+y
 106a: fc        inc   y
 106b: 60        clrc
@@ -1152,6 +1202,7 @@ NOTE_NUM     = $0285
 1075: fc        inc   y
 1076: ae        pop   a
 1077: ce        pop   x
+
 1078: 28 82     and   a,#$82
 107a: c4 04     mov   $04,a
 107c: f5 6f 05  mov   a,$056f+x
@@ -1159,6 +1210,7 @@ NOTE_NUM     = $0285
 1081: 04 04     or    a,$04
 1083: d5 6f 05  mov   $056f+x,a
 1086: 5f 4f 0f  jmp   $0f4f
+
 1089: f7 02     mov   a,($02)+y
 108b: fc        inc   y
 108c: c4 04     mov   $04,a
@@ -1174,6 +1226,7 @@ NOTE_NUM     = $0285
 109e: ae        pop   a
 109f: ce        pop   x
 10a0: 5f 78 10  jmp   $1078
+
 10a3: f7 02     mov   a,($02)+y
 10a5: fc        inc   y
 10a6: 60        clrc
@@ -1189,6 +1242,7 @@ NOTE_NUM     = $0285
 10b8: ae        pop   a
 10b9: ce        pop   x
 10ba: 5f 78 10  jmp   $1078
+
 10bd: f7 02     mov   a,($02)+y
 10bf: fc        inc   y
 10c0: 60        clrc
@@ -1203,6 +1257,7 @@ NOTE_NUM     = $0285
 10d1: ae        pop   a
 10d2: ce        pop   x
 10d3: 5f 78 10  jmp   $1078
+
 10d6: ce        pop   x
 10d7: d8 06     mov   $06,x
 10d9: f7 02     mov   a,($02)+y
@@ -1214,6 +1269,7 @@ NOTE_NUM     = $0285
 10e3: ee        pop   y
 10e4: ce        pop   x
 10e5: 5f 4f 0f  jmp   $0f4f
+
 10e8: f7 02     mov   a,($02)+y
 10ea: fc        inc   y
 10eb: 60        clrc
@@ -1226,6 +1282,7 @@ NOTE_NUM     = $0285
 10f7: ae        pop   a
 10f8: ce        pop   x
 10f9: 5f 21 10  jmp   $1021
+
 10fc: f7 02     mov   a,($02)+y
 10fe: fc        inc   y
 10ff: 60        clrc
@@ -1238,6 +1295,7 @@ NOTE_NUM     = $0285
 110b: ae        pop   a
 110c: ce        pop   x
 110d: 5f 21 10  jmp   $1021
+
 1110: f7 02     mov   a,($02)+y
 1112: fc        inc   y
 1113: 60        clrc
@@ -1251,6 +1309,7 @@ NOTE_NUM     = $0285
 1121: ae        pop   a
 1122: ce        pop   x
 1123: 5f 21 10  jmp   $1021
+
 1126: e8 02     mov   a,#$02
 1128: 04 00     or    a,$00
 112a: c4 f2     mov   $f2,a
@@ -1272,6 +1331,7 @@ NOTE_NUM     = $0285
 114b: d5 b7 04  mov   $04b7+x,a
 114e: c4 f3     mov   DSP_DATA,a
 1150: 5f 4f 0f  jmp   $0f4f
+
 1153: e8 03     mov   a,#$03
 1155: 04 00     or    a,$00
 1157: c4 f2     mov   $f2,a
@@ -1298,6 +1358,7 @@ NOTE_NUM     = $0285
 1183: ae        pop   a
 1184: c4 f3     mov   DSP_DATA,a
 1186: 5f 4f 0f  jmp   $0f4f
+
 1189: e8 03     mov   a,#$03
 118b: 04 00     or    a,$00
 118d: c4 f2     mov   $f2,a
@@ -1322,6 +1383,7 @@ NOTE_NUM     = $0285
 11b2: 8b f2     dec   $f2
 11b4: c4 f3     mov   DSP_DATA,a
 11b6: 5f 4f 0f  jmp   $0f4f
+
 11b9: f7 02     mov   a,($02)+y
 11bb: fc        inc   y
 11bc: 60        clrc
@@ -1340,6 +1402,7 @@ NOTE_NUM     = $0285
 11d9: c4 07     mov   $07,a
 11db: 3f 6e 18  call  $186e
 11de: 5f 4f 0f  jmp   $0f4f
+
 11e1: f7 02     mov   a,($02)+y
 11e3: fc        inc   y
 11e4: 60        clrc
@@ -1362,6 +1425,7 @@ NOTE_NUM     = $0285
 1209: c4 07     mov   $07,a
 120b: 3f 6e 18  call  $186e
 120e: 5f 4f 0f  jmp   $0f4f
+
 1211: f7 02     mov   a,($02)+y
 1213: fc        inc   y
 1214: 60        clrc
@@ -1382,6 +1446,7 @@ NOTE_NUM     = $0285
 1233: c4 07     mov   $07,a
 1235: 3f 6e 18  call  $186e
 1238: 5f 4f 0f  jmp   $0f4f
+
 123b: ce        pop   x
 123c: f5 67 05  mov   a,$0567+x
 123f: d0 16     bne   $1257
@@ -1405,6 +1470,7 @@ NOTE_NUM     = $0285
 1261: fc        inc   y
 1262: fc        inc   y
 1263: 5f 4f 0f  jmp   $0f4f
+
 1266: f7 02     mov   a,($02)+y
 1268: fc        inc   y
 1269: 60        clrc
@@ -1420,6 +1486,7 @@ NOTE_NUM     = $0285
 127d: c4 f3     mov   DSP_DATA,a
 127f: ce        pop   x
 1280: 5f 4f 0f  jmp   $0f4f
+
 1283: ce        pop   x
 1284: 8f 6c f2  mov   $f2,#$6c
 1287: e4 f3     mov   a,DSP_DATA
@@ -1428,6 +1495,7 @@ NOTE_NUM     = $0285
 128d: fc        inc   y
 128e: c4 f3     mov   DSP_DATA,a
 1290: 5f 4f 0f  jmp   $0f4f
+
 1293: ce        pop   x
 1294: e8 02     mov   a,#$02
 1296: 04 00     or    a,$00
@@ -1444,6 +1512,7 @@ NOTE_NUM     = $0285
 12ad: d5 b7 04  mov   $04b7+x,a
 12b0: c4 f3     mov   DSP_DATA,a
 12b2: 5f 4f 0f  jmp   $0f4f
+
 12b5: ce        pop   x
 12b6: e8 03     mov   a,#$03
 12b8: 04 00     or    a,$00
@@ -1465,6 +1534,7 @@ NOTE_NUM     = $0285
 12da: ae        pop   a
 12db: c4 f3     mov   DSP_DATA,a
 12dd: 5f 4f 0f  jmp   $0f4f
+
 12e0: ce        pop   x
 12e1: e8 03     mov   a,#$03
 12e3: 04 00     or    a,$00
@@ -1484,6 +1554,7 @@ NOTE_NUM     = $0285
 12fe: 8b f2     dec   $f2
 1300: c4 f3     mov   DSP_DATA,a
 1302: 5f 4f 0f  jmp   $0f4f
+
 1305: ce        pop   x
 1306: f5 5f 05  mov   a,$055f+x
 1309: bc        inc   a
@@ -1511,6 +1582,7 @@ NOTE_NUM     = $0285
 132e: d5 ff 04  mov   $04ff+x,a
 1331: ce        pop   x
 1332: 5f 4f 0f  jmp   $0f4f
+
 1335: ce        pop   x
 1336: 4d        push  x
 1337: f5 5f 05  mov   a,$055f+x
@@ -1538,11 +1610,12 @@ NOTE_NUM     = $0285
 1366: 8d 00     mov   y,#$00
 1368: ce        pop   x
 1369: 5f 33 18  jmp   $1833
-136c: ce        pop   x
+136c: ce        pop   x         ; From $1349
 136d: f5 5f 05  mov   a,$055f+x
 1370: 9c        dec   a
 1371: d5 5f 05  mov   $055f+x,a
 1374: 5f 33 18  jmp   $1833
+
 1377: ce        pop   x
 1378: f7 02     mov   a,($02)+y
 137a: fc        inc   y
@@ -1562,6 +1635,7 @@ NOTE_NUM     = $0285
 1392: c4 03     mov   $03,a
 1394: 8d 00     mov   y,#$00
 1396: 5f 4f 0f  jmp   $0f4f
+
 1399: ce        pop   x
 139a: f7 02     mov   a,($02)+y
 139c: fc        inc   y
@@ -1575,6 +1649,7 @@ NOTE_NUM     = $0285
 13ae: c4 07     mov   $07,a
 13b0: 3f 6e 18  call  $186e
 13b3: 5f 4f 0f  jmp   $0f4f
+
 13b6: ce        pop   x
 13b7: f7 02     mov   a,($02)+y
 13b9: fc        inc   y
@@ -1592,6 +1667,7 @@ NOTE_NUM     = $0285
 13d3: c4 07     mov   $07,a
 13d5: 3f 6e 18  call  $186e
 13d8: 5f 4f 0f  jmp   $0f4f
+
 13db: ce        pop   x
 13dc: f7 02     mov   a,($02)+y
 13de: fc        inc   y
@@ -1608,6 +1684,7 @@ NOTE_NUM     = $0285
 13f4: c4 07     mov   $07,a
 13f6: 3f 6e 18  call  $186e
 13f9: 5f 4f 0f  jmp   $0f4f
+
 13fc: ce        pop   x
 13fd: e8 06     mov   a,#$06
 13ff: 04 00     or    a,$00
@@ -1620,6 +1697,7 @@ NOTE_NUM     = $0285
 140c: fc        inc   y
 140d: c4 f3     mov   DSP_DATA,a
 140f: 5f 4f 0f  jmp   $0f4f
+
 1412: ce        pop   x
 1413: e8 07     mov   a,#$07
 1415: 04 00     or    a,$00
@@ -1628,6 +1706,7 @@ NOTE_NUM     = $0285
 141b: fc        inc   y
 141c: c4 f3     mov   DSP_DATA,a
 141e: 5f 4f 0f  jmp   $0f4f
+
 1421: ce        pop   x
 1422: e8 04     mov   a,#$04
 1424: 04 00     or    a,$00
@@ -1647,12 +1726,14 @@ NOTE_NUM     = $0285
 143d: ae        pop   a
 143e: c4 12     mov   $12,a
 1440: 5f 4f 0f  jmp   $0f4f
+
 1443: ce        pop   x
 1444: 8f 2d f2  mov   $f2,#$2d
 1447: f5 6a 21  mov   a,$216a+x
 144a: 04 f3     or    a,DSP_DATA
 144c: c4 f3     mov   DSP_DATA,a
 144e: 5f 4f 0f  jmp   $0f4f
+
 1451: ce        pop   x
 1452: f5 6a 21  mov   a,$216a+x
 1455: 2d        push  a
@@ -1662,6 +1743,7 @@ NOTE_NUM     = $0285
 145b: 04 32     or    a,$32
 145d: c4 32     mov   $32,a
 145f: 5f 4f 0f  jmp   $0f4f
+
 1462: ce        pop   x
 1463: f5 6a 21  mov   a,$216a+x
 1466: 04 32     or    a,$32
@@ -1672,6 +1754,7 @@ NOTE_NUM     = $0285
 146e: c4 f2     mov   $f2,a
 1470: 8f 00 f3  mov   DSP_DATA,#$00
 1473: 5f 4f 0f  jmp   $0f4f
+
 1476: ce        pop   x
 1477: f7 02     mov   a,($02)+y
 1479: fc        inc   y
@@ -1680,6 +1763,7 @@ NOTE_NUM     = $0285
 147e: fc        inc   y
 147f: c4 f3     mov   DSP_DATA,a
 1481: 5f 4f 0f  jmp   $0f4f
+
 1484: ce        pop   x
 1485: f7 02     mov   a,($02)+y
 1487: fc        inc   y
@@ -1690,6 +1774,7 @@ NOTE_NUM     = $0285
 148e: 84 f3     adc   a,DSP_DATA
 1490: c4 f3     mov   DSP_DATA,a
 1492: 5f 4f 0f  jmp   $0f4f
+
 1495: ce        pop   x
 1496: f5 67 05  mov   a,$0567+x
 1499: f0 03     beq   $149e
@@ -1708,12 +1793,14 @@ NOTE_NUM     = $0285
 14b5: fc        inc   y
 14b6: fc        inc   y
 14b7: 5f 4f 0f  jmp   $0f4f
+
 14ba: ce        pop   x
 14bb: 8f 3d f2  mov   $f2,#$3d
 14be: f5 6a 21  mov   a,$216a+x
 14c1: 04 f3     or    a,DSP_DATA
 14c3: c4 f3     mov   DSP_DATA,a
 14c5: 5f 4f 0f  jmp   $0f4f
+
 14c8: ce        pop   x
 14c9: 8f 3d f2  mov   $f2,#$3d
 14cc: f5 6a 21  mov   a,$216a+x
@@ -1721,6 +1808,7 @@ NOTE_NUM     = $0285
 14d1: 24 f3     and   a,DSP_DATA
 14d3: c4 f3     mov   DSP_DATA,a
 14d5: 5f 4f 0f  jmp   $0f4f
+
 14d8: f7 02     mov   a,($02)+y
 14da: fc        inc   y
 14db: 60        clrc
@@ -1736,6 +1824,7 @@ NOTE_NUM     = $0285
 14ee: ae        pop   a
 14ef: ce        pop   x
 14f0: 5f 78 10  jmp   $1078
+
 14f3: f7 02     mov   a,($02)+y
 14f5: fc        inc   y
 14f6: 60        clrc
@@ -1756,6 +1845,7 @@ NOTE_NUM     = $0285
 1510: 04 04     or    a,$04
 1512: d5 6f 05  mov   $056f+x,a
 1515: 5f 4f 0f  jmp   $0f4f
+
 1518: f7 02     mov   a,($02)+y
 151a: fc        inc   y
 151b: 60        clrc
@@ -1776,6 +1866,7 @@ NOTE_NUM     = $0285
 1535: 04 04     or    a,$04
 1537: d5 6f 05  mov   $056f+x,a
 153a: 5f 4f 0f  jmp   $0f4f
+
 153d: f7 02     mov   a,($02)+y
 153f: fc        inc   y
 1540: 60        clrc
@@ -1795,6 +1886,7 @@ NOTE_NUM     = $0285
 1556: ee        pop   y
 1557: ce        pop   x
 1558: 5f 78 10  jmp   $1078
+
 155b: f7 02     mov   a,($02)+y
 155d: fc        inc   y
 155e: 60        clrc
@@ -1825,6 +1917,7 @@ NOTE_NUM     = $0285
 1588: 04 04     or    a,$04
 158a: d5 6f 05  mov   $056f+x,a
 158d: 5f 4f 0f  jmp   $0f4f
+
 1590: f7 02     mov   a,($02)+y
 1592: fc        inc   y
 1593: 60        clrc
@@ -1837,6 +1930,7 @@ NOTE_NUM     = $0285
 15a0: ae        pop   a
 15a1: ce        pop   x
 15a2: 5f 78 10  jmp   $1078
+
 15a5: f7 02     mov   a,($02)+y
 15a7: fc        inc   y
 15a8: 60        clrc
@@ -1850,6 +1944,7 @@ NOTE_NUM     = $0285
 15b6: ae        pop   a
 15b7: ce        pop   x
 15b8: 5f 78 10  jmp   $1078
+
 15bb: f7 02     mov   a,($02)+y
 15bd: fc        inc   y
 15be: 60        clrc
@@ -1863,6 +1958,7 @@ NOTE_NUM     = $0285
 15cc: ae        pop   a
 15cd: ce        pop   x
 15ce: 5f 78 10  jmp   $1078
+
 15d1: f7 02     mov   a,($02)+y
 15d3: fc        inc   y
 15d4: 60        clrc
@@ -1876,6 +1972,7 @@ NOTE_NUM     = $0285
 15e2: ae        pop   a
 15e3: ce        pop   x
 15e4: 5f 78 10  jmp   $1078
+
 15e7: f7 02     mov   a,($02)+y
 15e9: fc        inc   y
 15ea: 60        clrc
@@ -1888,6 +1985,7 @@ NOTE_NUM     = $0285
 15f6: ae        pop   a
 15f7: ce        pop   x
 15f8: 5f 78 10  jmp   $1078
+
 15fb: f7 02     mov   a,($02)+y
 15fd: fc        inc   y
 15fe: 60        clrc
@@ -1900,6 +1998,7 @@ NOTE_NUM     = $0285
 160a: ae        pop   a
 160b: ce        pop   x
 160c: 5f 78 10  jmp   $1078
+
 160f: f7 02     mov   a,($02)+y
 1611: fc        inc   y
 1612: 60        clrc
@@ -1913,6 +2012,7 @@ NOTE_NUM     = $0285
 1620: ae        pop   a
 1621: ce        pop   x
 1622: 5f 78 10  jmp   $1078
+
 1625: f7 02     mov   a,($02)+y
 1627: fc        inc   y
 1628: 60        clrc
@@ -1939,6 +2039,7 @@ NOTE_NUM     = $0285
 164d: 04 04     or    a,$04
 164f: d5 6f 05  mov   $056f+x,a
 1652: 5f 4f 0f  jmp   $0f4f
+
 1655: f7 02     mov   a,($02)+y
 1657: fc        inc   y
 1658: 60        clrc
@@ -1965,6 +2066,7 @@ NOTE_NUM     = $0285
 167d: 04 04     or    a,$04
 167f: d5 6f 05  mov   $056f+x,a
 1682: 5f 4f 0f  jmp   $0f4f
+
 1685: f7 02     mov   a,($02)+y
 1687: fc        inc   y
 1688: 60        clrc
@@ -1990,6 +2092,7 @@ NOTE_NUM     = $0285
 16a9: ee        pop   y
 16aa: ce        pop   x
 16ab: 5f 78 10  jmp   $1078
+
 16ae: f7 02     mov   a,($02)+y
 16b0: fc        inc   y
 16b1: 60        clrc
@@ -2026,6 +2129,7 @@ NOTE_NUM     = $0285
 16e4: 04 04     or    a,$04
 16e6: d5 6f 05  mov   $056f+x,a
 16e9: 5f 4f 0f  jmp   $0f4f
+
 16ec: f7 02     mov   a,($02)+y
 16ee: fc        inc   y
 16ef: 60        clrc
@@ -2047,6 +2151,7 @@ NOTE_NUM     = $0285
 170c: ae        pop   a
 170d: ce        pop   x
 170e: 5f 78 10  jmp   $1078
+
 1711: f7 02     mov   a,($02)+y
 1713: fc        inc   y
 1714: 60        clrc
@@ -2068,6 +2173,7 @@ NOTE_NUM     = $0285
 1731: ae        pop   a
 1732: ce        pop   x
 1733: 5f 78 10  jmp   $1078
+
 1736: f7 02     mov   a,($02)+y
 1738: fc        inc   y
 1739: 60        clrc
@@ -2089,6 +2195,7 @@ NOTE_NUM     = $0285
 1756: ae        pop   a
 1757: ce        pop   x
 1758: 5f 78 10  jmp   $1078
+
 175b: f7 02     mov   a,($02)+y
 175d: fc        inc   y
 175e: 60        clrc
@@ -2101,6 +2208,7 @@ NOTE_NUM     = $0285
 1769: ae        pop   a
 176a: ce        pop   x
 176b: 5f 21 10  jmp   $1021
+
 176e: f7 02     mov   a,($02)+y
 1770: fc        inc   y
 1771: 60        clrc
@@ -2119,6 +2227,7 @@ NOTE_NUM     = $0285
 1785: ae        pop   a
 1786: ce        pop   x
 1787: 5f 21 10  jmp   $1021
+
 178a: ce        pop   x
 178b: f5 6f 05  mov   a,$056f+x
 178e: 2d        push  a
@@ -2128,6 +2237,7 @@ NOTE_NUM     = $0285
 1795: fc        inc   y
 1796: fc        inc   y
 1797: 5f 4f 0f  jmp   $0f4f
+
 179a: ce        pop   x
 179b: f5 6f 05  mov   a,$056f+x
 179e: 2d        push  a
@@ -2137,6 +2247,7 @@ NOTE_NUM     = $0285
 17a5: fc        inc   y
 17a6: fc        inc   y
 17a7: 5f 4f 0f  jmp   $0f4f
+
 17aa: ce        pop   x
 17ab: f5 6f 05  mov   a,$056f+x
 17ae: 2d        push  a
@@ -2146,6 +2257,7 @@ NOTE_NUM     = $0285
 17b5: fc        inc   y
 17b6: fc        inc   y
 17b7: 5f 4f 0f  jmp   $0f4f
+
 17ba: ce        pop   x
 17bb: f5 6f 05  mov   a,$056f+x
 17be: 2d        push  a
@@ -2155,6 +2267,7 @@ NOTE_NUM     = $0285
 17c5: fc        inc   y
 17c6: fc        inc   y
 17c7: 5f 4f 0f  jmp   $0f4f
+
 17ca: ce        pop   x
 17cb: f5 6f 05  mov   a,$056f+x
 17ce: 2d        push  a
@@ -2164,6 +2277,7 @@ NOTE_NUM     = $0285
 17d5: fc        inc   y
 17d6: fc        inc   y
 17d7: 5f 4f 0f  jmp   $0f4f
+
 17da: ce        pop   x
 17db: f5 6f 05  mov   a,$056f+x
 17de: 2d        push  a
@@ -2173,6 +2287,7 @@ NOTE_NUM     = $0285
 17e5: fc        inc   y
 17e6: fc        inc   y
 17e7: 5f 4f 0f  jmp   $0f4f
+
 17ea: f7 02     mov   a,($02)+y
 17ec: fc        inc   y
 17ed: 60        clrc
@@ -2202,6 +2317,7 @@ NOTE_NUM     = $0285
 1815: ae        pop   a
 1816: ce        pop   x
 1817: 5f 78 10  jmp   $1078
+
 181a: ce        pop   x
 181b: 3f 44 18  call  $1844
 181e: f5 6a 21  mov   a,$216a+x
@@ -2225,6 +2341,7 @@ NOTE_NUM     = $0285
 1841: ce        pop   x
 1842: ae        pop   a
 1843: 6f        ret
+
 1844: 8f 2d f2  mov   $f2,#$2d
 1847: f5 6a 21  mov   a,$216a+x
 184a: 48 ff     eor   a,#$ff
@@ -2236,6 +2353,7 @@ NOTE_NUM     = $0285
 1855: 24 f3     and   a,DSP_DATA
 1857: c4 f3     mov   DSP_DATA,a
 1859: 6f        ret
+
 185a: ba f6     movw  ya,PORT2
 185c: dd        mov   a,y
 185d: 44 1c     eor   a,$1c
@@ -2246,7 +2364,9 @@ NOTE_NUM     = $0285
 1867: da 1d     movw  $1d,ya
 1869: 18 80 1e  or    $1e,#$80
 186c: 6f        ret
+
 186d: 6f        ret
+
 186e: 6d        push  y
 186f: e4 65     mov   a,$65
 1871: f0 1a     beq   $188d
@@ -2281,6 +2401,7 @@ NOTE_NUM     = $0285
 18a6: fa 07 f3  mov   ($f3),($07)
 18a9: ee        pop   y
 18aa: 6f        ret
+
 18ab: f5 55 02  mov   a,$0255+x
 18ae: f0 0c     beq   $18bc
 18b0: c4 00     mov   $00,a
@@ -2325,6 +2446,7 @@ NOTE_NUM     = $0285
 18fc: c4 04     mov   $04,a
 18fe: 3f b6 1c  call  $1cb6
 1901: 6f        ret
+
 1902: ce        pop   x
 1903: e4 00     mov   a,$00
 1905: 28 1f     and   a,#$1f
@@ -2339,6 +2461,7 @@ NOTE_NUM     = $0285
 1919: c4 00     mov   $00,a
 191b: 3f bf 1d  call  $1dbf
 191e: 6f        ret
+
 191f: ce        pop   x
 1920: e4 00     mov   a,$00
 1922: 28 1f     and   a,#$1f
@@ -2346,6 +2469,7 @@ NOTE_NUM     = $0285
 1925: d5 25 02  mov   $0225+x,a
 1928: d5 75 02  mov   $0275+x,a
 192b: 6f        ret
+
 192c: ce        pop   x
 192d: e4 00     mov   a,$00
 192f: 28 1f     and   a,#$1f
@@ -2354,6 +2478,7 @@ NOTE_NUM     = $0285
 1935: e8 20     mov   a,#$20
 1937: d5 55 02  mov   $0255+x,a
 193a: 6f        ret
+
 193b: ce        pop   x
 193c: f5 75 02  mov   a,$0275+x
 193f: d5 25 02  mov   $0225+x,a
@@ -2362,6 +2487,7 @@ NOTE_NUM     = $0285
 1946: 08 20     or    a,#$20
 1948: d5 55 02  mov   $0255+x,a
 194b: 6f        ret
+
 194c: ce        pop   x
 194d: f5 75 02  mov   a,$0275+x
 1950: d5 25 02  mov   $0225+x,a
@@ -2370,6 +2496,7 @@ NOTE_NUM     = $0285
 1957: 08 a0     or    a,#$a0
 1959: d5 55 02  mov   $0255+x,a
 195c: 6f        ret
+
 195d: ce        pop   x
 195e: e4 00     mov   a,$00
 1960: 28 1f     and   a,#$1f
@@ -2421,6 +2548,7 @@ NOTE_NUM     = $0285
 19ba: 1b 9a     asl   $9a+x
 19bc: 1b ce     asl   $ce+x
 19be: 6f        ret
+
 19bf: ce        pop   x
 19c0: 3f a8 1b  call  $1ba8
 19c3: c4 04     mov   $04,a
@@ -2429,6 +2557,7 @@ NOTE_NUM     = $0285
 19c9: e4 04     mov   a,$04
 19cb: d5 af 02  mov   $02af+x,a
 19ce: 6f        ret
+
 19cf: ce        pop   x
 19d0: 3f a8 1b  call  $1ba8
 19d3: c4 04     mov   $04,a
@@ -2455,36 +2584,44 @@ NOTE_NUM     = $0285
 19fb: ae        pop   a
 19fc: d0 01     bne   $19ff
 19fe: 6f        ret
+
 19ff: 08 80     or    a,#$80
 1a01: d6 a7 02  mov   $02a7+y,a
 1a04: ad 05     cmp   y,#$05
 1a06: f0 01     beq   $1a09
 1a08: 6f        ret
+
 1a09: e5 ac 02  mov   a,$02ac
 1a0c: 28 7f     and   a,#$7f
 1a0e: 3f c9 08  call  $08c9
 1a11: 68 ff     cmp   a,#$ff
 1a13: d0 01     bne   $1a16
 1a15: 6f        ret
+
 1a16: 08 80     or    a,#$80
 1a18: c4 18     mov   $18,a
 1a1a: 6f        ret
+
 1a1b: e4 04     mov   a,$04
 1a1d: d5 bf 02  mov   $02bf+x,a
 1a20: 6f        ret
+
 1a21: e4 04     mov   a,$04
 1a23: d5 cf 02  mov   $02cf+x,a
 1a26: 6f        ret
+
 1a27: e4 04     mov   a,$04
 1a29: 1c        asl   a
 1a2a: 80        setc
 1a2b: a8 80     sbc   a,#$80
 1a2d: c4 66     mov   $66,a
 1a2f: 6f        ret
+
 1a30: e4 04     mov   a,$04
 1a32: 1c        asl   a
 1a33: c4 67     mov   $67,a
 1a35: 6f        ret
+
 1a36: ce        pop   x
 1a37: 3f a8 1b  call  $1ba8
 1a3a: c4 04     mov   $04,a
@@ -2493,6 +2630,7 @@ NOTE_NUM     = $0285
 1a40: e4 04     mov   a,$04
 1a42: d5 ef 02  mov   $02ef+x,a
 1a45: 6f        ret
+
 1a46: ce        pop   x
 1a47: 3f a8 1b  call  $1ba8
 1a4a: c4 04     mov   $04,a
@@ -2501,6 +2639,7 @@ NOTE_NUM     = $0285
 1a50: e4 04     mov   a,$04
 1a52: d5 1f 03  mov   $031f+x,a
 1a55: 6f        ret
+
 1a56: ce        pop   x
 1a57: 3f a8 1b  call  $1ba8
 1a5a: c4 04     mov   $04,a
@@ -2509,6 +2648,7 @@ NOTE_NUM     = $0285
 1a60: e4 04     mov   a,$04
 1a62: d5 2f 03  mov   $032f+x,a
 1a65: 6f        ret
+
 1a66: ce        pop   x
 1a67: 3f a8 1b  call  $1ba8
 1a6a: c4 04     mov   $04,a
@@ -2519,6 +2659,7 @@ NOTE_NUM     = $0285
 1a75: 28 40     and   a,#$40
 1a77: f0 01     beq   $1a7a
 1a79: 6f        ret
+
 1a7a: f5 4f 03  mov   a,$034f+x
 1a7d: 3f 25 1e  call  $1e25
 1a80: 4e 3c 00  tclr1 $003c
@@ -2526,6 +2667,7 @@ NOTE_NUM     = $0285
 1a86: e8 00     mov   a,#$00
 1a88: d5 4f 03  mov   $034f+x,a
 1a8b: 6f        ret
+
 1a8c: ce        pop   x
 1a8d: 3f a8 1b  call  $1ba8
 1a90: c4 04     mov   $04,a
@@ -2534,6 +2676,7 @@ NOTE_NUM     = $0285
 1a96: e4 04     mov   a,$04
 1a98: d5 df 02  mov   $02df+x,a
 1a9b: 6f        ret
+
 1a9c: ce        pop   x
 1a9d: f5 35 02  mov   a,$0235+x
 1aa0: 5d        mov   x,a
@@ -2548,6 +2691,7 @@ NOTE_NUM     = $0285
 1ab6: e8 40     mov   a,#$40
 1ab8: d5 cf 02  mov   $02cf+x,a
 1abb: 6f        ret
+
 1abc: ce        pop   x
 1abd: e4 3c     mov   a,$3c
 1abf: c4 08     mov   $08,a
@@ -2580,9 +2724,11 @@ NOTE_NUM     = $0285
 1af9: e8 00     mov   a,#$00
 1afb: d5 4f 03  mov   $034f+x,a
 1afe: 6f        ret
+
 1aff: e4 06     mov   a,$06
 1b01: d5 4f 03  mov   $034f+x,a
 1b04: 6f        ret
+
 1b05: ce        pop   x
 1b06: 3f a8 1b  call  $1ba8
 1b09: c4 02     mov   $02,a
@@ -2591,21 +2737,26 @@ NOTE_NUM     = $0285
 1b0f: e4 02     mov   a,$02
 1b11: 3f f6 0d  call  $0df6
 1b14: 6f        ret
+
 1b15: ce        pop   x
 1b16: 3f a8 1b  call  $1ba8
 1b19: c5 03 02  mov   $0203,a
 1b1c: 6f        ret
+
 1b1d: ce        pop   x
 1b1e: 6f        ret
+
 1b1f: ce        pop   x
 1b20: e8 00     mov   a,#$00
 1b22: d5 15 02  mov   $0215+x,a
 1b25: d5 05 02  mov   $0205+x,a
 1b28: 6f        ret
+
 1b29: ce        pop   x
 1b2a: 3f a8 1b  call  $1ba8
 1b2d: d5 35 02  mov   $0235+x,a
 1b30: 6f        ret
+
 1b31: ce        pop   x
 1b32: 3f a8 1b  call  $1ba8
 1b35: d5 85 02  mov   $0285+x,a
@@ -2619,6 +2770,7 @@ NOTE_NUM     = $0285
 1b47: c4 04     mov   $04,a
 1b49: 3f b6 1c  call  $1cb6
 1b4c: 6f        ret
+
 1b4d: ce        pop   x
 1b4e: 3f a8 1b  call  $1ba8
 1b51: d5 85 02  mov   $0285+x,a
@@ -2627,6 +2779,7 @@ NOTE_NUM     = $0285
 1b59: c4 00     mov   $00,a
 1b5b: 3f bf 1d  call  $1dbf
 1b5e: 6f        ret
+
 1b5f: ce        pop   x
 1b60: 3f a8 1b  call  $1ba8
 1b63: d5 85 02  mov   $0285+x,a
@@ -2635,6 +2788,7 @@ NOTE_NUM     = $0285
 1b6c: e8 20     mov   a,#$20
 1b6e: d5 55 02  mov   $0255+x,a
 1b71: 6f        ret
+
 1b72: ce        pop   x
 1b73: 3f a8 1b  call  $1ba8
 1b76: d5 95 02  mov   $0295+x,a
@@ -2643,8 +2797,10 @@ NOTE_NUM     = $0285
 1b7f: e8 a0     mov   a,#$a0
 1b81: d5 55 02  mov   $0255+x,a
 1b84: 6f        ret
+
 1b85: ce        pop   x
 1b86: 6f        ret
+
 1b87: ce        pop   x
 1b88: 3f a8 1b  call  $1ba8
 1b8b: d5 95 02  mov   $0295+x,a
@@ -2655,40 +2811,53 @@ NOTE_NUM     = $0285
 1b95: ae        pop   a
 1b96: d5 6f 03  mov   $036f+x,a
 1b99: 6f        ret
+
 1b9a: ce        pop   x
 1b9b: e8 ff     mov   a,#$ff
 1b9d: d5 25 02  mov   $0225+x,a
 1ba0: 6f        ret
+
 1ba1: ce        pop   x
 1ba2: 28 07     and   a,#$07
 1ba4: d5 65 02  mov   $0265+x,a
 1ba7: 6f        ret
+
+JUMPTBL_1BB1:
 1ba8: 40        setp
-1ba9: f4 06     mov   a,$06+x
+1ba9: f4 06     mov   a,$06+x   ; $106
 1bab: 4d        push  x
 1bac: 1c        asl   a
 1bad: 5d        mov   x,a
 1bae: 1f b1 1b  jmp   ($1bb1+x)
-1bb1: bb 1b     inc   $1b+x
-1bb3: c2 1b     set6  $1b
-1bb5: c9 1b d0  mov   $d01b,x
-1bb8: 1b d7     asl   $d7+x
-1bba: 1b ce     asl   $ce+x
+
+1bb1: $1bbb
+1bb3: $1bc2
+1bb5: $1bc9
+1bb7: $1bd0
+1bb9: $1bd7
+
+1bbb: ce        pop   x
 1bbc: 3f dd 1b  call  $1bdd
 1bbf: 5f a8 1b  jmp   $1ba8
+
 1bc2: ce        pop   x
 1bc3: 3f fc 1b  call  $1bfc
 1bc6: 5f db 1b  jmp   $1bdb
+
 1bc9: ce        pop   x
 1bca: 3f 08 1c  call  $1c08
 1bcd: 5f a8 1b  jmp   $1ba8
+
 1bd0: ce        pop   x
 1bd1: 3f 2c 1c  call  $1c2c
 1bd4: 5f db 1b  jmp   $1bdb
 1bd7: ce        pop   x
+
 1bd8: 3f 77 1c  call  $1c77
 1bdb: 20        clrp
 1bdc: 6f        ret
+
+;DP=$100!
 1bdd: 3f 9a 1c  call  $1c9a
 1be0: f7 00     mov   a,($00)+y
 1be2: fc        inc   y
@@ -2705,6 +2874,7 @@ NOTE_NUM     = $0285
 1bf6: d4 06     mov   $06+x,a
 1bf8: 3f a7 1c  call  $1ca7
 1bfb: 6f        ret
+
 1bfc: 3f 9a 1c  call  $1c9a
 1bff: f7 00     mov   a,($00)+y
 1c01: fc        inc   y
@@ -2712,6 +2882,7 @@ NOTE_NUM     = $0285
 1c03: 3f a7 1c  call  $1ca7
 1c06: ae        pop   a
 1c07: 6f        ret
+
 1c08: 3f 9a 1c  call  $1c9a
 1c0b: f4 16     mov   a,$16+x
 1c0d: d0 0e     bne   $1c1d
@@ -2730,6 +2901,7 @@ NOTE_NUM     = $0285
 1c27: d4 26     mov   $26+x,a
 1c29: 9b 16     dec   $16+x
 1c2b: 6f        ret
+
 1c2c: 3f 9a 1c  call  $1c9a
 1c2f: f4 26     mov   a,$26+x
 1c31: 10 18     bpl   $1c4b
@@ -2770,6 +2942,7 @@ NOTE_NUM     = $0285
 1c72: d4 06     mov   $06+x,a
 1c74: e4 04     mov   a,$04
 1c76: 6f        ret
+
 1c77: 3f 9a 1c  call  $1c9a
 1c7a: e8 02     mov   a,#$02
 1c7c: d4 06     mov   $06+x,a
@@ -2788,12 +2961,14 @@ NOTE_NUM     = $0285
 1c95: e4 04     mov   a,$04
 1c97: d7 02     mov   ($02)+y,a
 1c99: 6f        ret
+
 1c9a: f5 05 02  mov   a,$0205+x
 1c9d: c4 00     mov   $00,a
 1c9f: f5 15 02  mov   a,$0215+x
 1ca2: c4 01     mov   $01,a
 1ca4: 8d 00     mov   y,#$00
 1ca6: 6f        ret
+
 1ca7: 60        clrc
 1ca8: dd        mov   a,y
 1ca9: 84 00     adc   a,$00
@@ -2802,6 +2977,7 @@ NOTE_NUM     = $0285
 1cb0: 84 01     adc   a,$01
 1cb2: d5 15 02  mov   $0215+x,a
 1cb5: 6f        ret
+
 1cb6: f8 6d     mov   x,$6d
 1cb8: e4 00     mov   a,$00
 1cba: 28 0f     and   a,#$0f
@@ -2815,6 +2991,7 @@ NOTE_NUM     = $0285
 1cc8: 3d        inc   x
 1cc9: d8 6d     mov   $6d,x
 1ccb: 6f        ret
+
 1ccc: f8 6d     mov   x,$6d
 1cce: f0 1e     beq   $1cee
 1cd0: cd 00     mov   x,#$00
@@ -2835,6 +3012,7 @@ NOTE_NUM     = $0285
 1cea: 3e 6d     cmp   x,$6d
 1cec: d0 e4     bne   $1cd2
 1cee: 6f        ret
+
 1cef: 38 0f 00  and   $00,#$0f
 1cf2: cd 07     mov   x,#$07
 1cf4: fa 3c 06  mov   ($06),($3c)
@@ -2856,6 +3034,7 @@ NOTE_NUM     = $0285
 1d13: 1d        dec   x
 1d14: 10 fa     bpl   $1d10
 1d16: 6f        ret
+
 1d17: f5 6a 21  mov   a,$216a+x
 1d1a: 0e 3d 00  tset1 $003d
 1d1d: 0e 3c 00  tset1 $003c
@@ -2936,6 +3115,7 @@ NOTE_NUM     = $0285
 1db8: d5 87 04  mov   $0487+x,a
 1dbb: d5 7f 04  mov   $047f+x,a
 1dbe: 6f        ret
+
 1dbf: 38 0f 00  and   $00,#$0f
 1dc2: f8 6d     mov   x,$6d
 1dc4: f0 18     beq   $1dde
@@ -2969,6 +3149,7 @@ NOTE_NUM     = $0285
 1dfb: 1d        dec   x
 1dfc: 10 ea     bpl   $1de8
 1dfe: 6f        ret
+
 1dff: f4 41     mov   a,$41+x
 1e01: 28 0f     and   a,#$0f
 1e03: fd        mov   y,a
@@ -2982,10 +3163,12 @@ NOTE_NUM     = $0285
 1e16: e8 00     mov   a,#$00
 1e18: d6 4f 03  mov   $034f+y,a
 1e1b: 6f        ret
+
 1e1c: e4 08     mov   a,$08
 1e1e: 16 4f 03  or    a,$034f+y
 1e21: d6 4f 03  mov   $034f+y,a
 1e24: 6f        ret
+
 1e25: 2d        push  a
 1e26: c4 08     mov   $08,a
 1e28: fa 30 09  mov   ($09),($30)
@@ -3011,6 +3194,7 @@ NOTE_NUM     = $0285
 1e4e: 3f 6a 1e  call  $1e6a
 1e51: 3f 55 1e  call  $1e55
 1e54: 6f        ret
+
 1e55: 40        setp
 1e56: cd 0f     mov   x,#$0f
 1e58: 7d        mov   a,x
@@ -3047,6 +3231,7 @@ NOTE_NUM     = $0285
 1e98: 1d        dec   x
 1e99: 10 d4     bpl   $1e6f
 1e9b: 6f        ret
+
 1e9c: e5 aa 02  mov   a,$02aa
 1e9f: 30 03     bmi   $1ea4
 1ea1: 5f 30 1f  jmp   $1f30
@@ -3101,6 +3286,7 @@ NOTE_NUM     = $0285
 1f0f: 48 ff     eor   a,#$ff
 1f11: c5 a6 02  mov   $02a6,a
 1f14: 6f        ret
+
 1f15: ac a6 02  inc   $02a6
 1f18: 30 15     bmi   $1f2f
 1f1a: e5 aa 02  mov   a,$02aa
@@ -3112,6 +3298,7 @@ NOTE_NUM     = $0285
 1f2a: e8 00     mov   a,#$00
 1f2c: c5 a5 02  mov   $02a5,a
 1f2f: 6f        ret
+
 1f30: e5 a7 02  mov   a,$02a7
 1f33: 10 23     bpl   $1f58
 1f35: 28 7f     and   a,#$7f
@@ -3129,6 +3316,7 @@ NOTE_NUM     = $0285
 1f55: 1c        asl   a
 1f56: c4 f3     mov   $f3,a
 1f58: 6f        ret
+
 1f59: e5 ab 02  mov   a,$02ab
 1f5c: 1c        asl   a
 1f5d: 1c        asl   a
@@ -3146,6 +3334,7 @@ NOTE_NUM     = $0285
 1f70: 1d        dec   x
 1f71: 10 f1     bpl   $1f64
 1f73: 6f        ret
+
 1f74: e8 00     mov   a,#$00
 1f76: 8f 2c f2  mov   $f2,#$2c
 1f79: c4 f3     mov   $f3,a
@@ -3164,6 +3353,8 @@ NOTE_NUM     = $0285
 1f9b: 8f 3d f2  mov   $f2,#$3d
 1f9e: c4 f3     mov   $f3,a
 1fa0: 6f        ret
+
+DSPTimerInit:
 1fa1: 8f 00 f1  mov   DSP_CTRL,#$00
 1fa4: 8f 60 fa  mov   TIMER0,#$60
 1fa7: 8f 60 fb  mov   TIMER1,#$60
@@ -3173,7 +3364,6 @@ NOTE_NUM     = $0285
 1fb3: 8f 00 f6  mov   PORT2,#$00
 1fb6: 8f 00 f7  mov   PORT3,#$00
 1fb9: 6f        ret
-
 1fba: 8f 6c f2  mov   $f2,#$6c
 1fbd: 8f e0 f3  mov   $f3,#$e0
 1fc0: 8f 5d f2  mov   DSP_ADDR,#$5d
@@ -3181,12 +3371,14 @@ NOTE_NUM     = $0285
 1fc5: c4 f3     mov   $f3,a
 1fc7: cd 26     mov   x,#$26
 1fc9: f5 f5 1f  mov   a,$1ff5+x
+
 1fcc: fd        mov   y,a
 1fcd: f5 f6 1f  mov   a,$1ff6+x
 1fd0: 3f 1d 20  call  $201d
 1fd3: 1d        dec   x
 1fd4: 1d        dec   x
 1fd5: 10 f2     bpl   $1fc9
+
 1fd7: cd ff     mov   x,#$ff
 1fd9: 8d 00     mov   y,#$00
 1fdb: 00        nop
@@ -3201,39 +3393,36 @@ NOTE_NUM     = $0285
 1fee: 8f 1c f2  mov   DSP_ADDR,#$1c
 1ff1: 8f 60 f3  mov   $f3,#$60
 1ff4: 6f        ret
-1ff5: 2d        push  a
-1ff6: 00        nop
-1ff7: 3d        inc   x
-1ff8: 00        nop
-1ff9: 0c 00 1c  asl   $1c00
-1ffc: 00        nop
-1ffd: 7d        mov   a,x
-1ffe: 00        nop
-1fff: 0d        push  psw
-2000: 00        nop
-2001: 4d        push  x
-2002: 00        nop
-2003: 2c 00 3c  rol   $3c00
-2006: 00        nop
-2007: 6d        push  y
-2008: f8 5c     mov   x,$5c
-200a: 00        nop
-200b: 4c 00 0f  lsr   $0f00
-200e: 7f        reti
-200f: 1f 00 2f  jmp   ($2f00+x)
-2012: 00        nop
-2013: 3f 00 4f  call  $4f00
-2016: 00        nop
-2017: 5f 00 6f  jmp   $6f00
-201a: 00        nop
-201b: 7f        reti
-201c: 00        nop
+
+1ff5: $2d, $00
+1ff7: $3d, $00
+1ff9: $0c, $00
+1ffb: $1c, $00
+1ffd: $7d, $00
+1fff: $0d, $00
+2001: $4d, $00
+2003: $2c, $00
+2005: $3c, $00
+2007: $6d, $f8
+2009: $5c, $00
+200b: $4c, $00
+200d: $0f, $7f
+200f: $1f, $00
+2011: $2f, $00
+2013: $3f, $00
+2015: $4f, $00
+2017: $5f, $00
+2019: $6f, $00
+201b: $7f, $00
+
+SetDSPReg:
 201d: cb f2     mov   DSP_ADDR,y
 201f: c4 f3     mov   $f3,a
 2021: 6f        ret
 2022: cb f2     mov   DSP_ADDR,y
 2024: e4 f3     mov   a,$f3
 2026: 6f        ret
+
 2027: e8 00     mov   a,#$00
 2029: c4 f4     mov   PORT0,a
 202b: c4 02     mov   $02,a
@@ -3351,6 +3540,7 @@ NOTE_NUM     = $0285
 2143: c5 39 14  mov   $1439,a
 2146: c5 ab 0b  mov   $0bab,a
 2149: 6f        ret
+
 214a: 7f        reti
 214b: 00        nop
 214c: 00        nop
@@ -3359,3 +3549,11 @@ NOTE_NUM     = $0285
 214f: 00        nop
 2150: 00        nop
 2151: 00        nop
+
+:dfc0: $00, $01, $02, $03,
+:dfc4: $04, $05, $06, $07,
+:dfc8: $08, $09, $0a, $0b,
+:dfcc: $0c, $0d, $0e, $0f,
+:dfd0: $10, $11, $12, $13,
+:dfd4: $14, $15, $16, $17,
+:dfd8: $18, $19, $1a, $1b,
