@@ -69,6 +69,8 @@ BUF_BASE_LOW = $66  ;
 BUF_BASE_HI  = $76  ;
 
 ;; Work area
+PTRACK_LOW   = $0205 ; Pointer to packed track data
+PTRACK_HI    = $0215
 TRACK_TICKS  = $0225
 TRACK_NUM    = $0235
 TRACK_STATE  = $0255  ; Seems to reflect KON/KOF
@@ -247,7 +249,7 @@ TRACK_NOTE   = $0285
 0943: c4 3c     mov   $3c,a
 0945: c4 3d     mov   $3d,a
 0947: cd 0f     mov   x,#$0f
-0949: d5 15 02  mov   $0215+x,a
+0949: d5 15 02  mov   PTRACK_HI+x,a
 094c: 1d        dec   x
 094d: 10 fa     bpl   $0949
 094f: cd 07     mov   x,#$07
@@ -302,9 +304,9 @@ TRACK_NOTE   = $0285
 09b1: 3a 02     incw  $02
 09b3: e4 03     mov   a,$03
 09b5: fd        mov   y,a
-09b6: d5 15 02  mov   $0215+x,a
+09b6: d5 15 02  mov   PTRACK_HI+x,a
 09b9: e4 02     mov   a,$02
-09bb: d5 05 02  mov   $0205+x,a
+09bb: d5 05 02  mov   PTRACK_LOW+x,a
 09be: 7a 04     addw  ya,$04
 09c0: da 02     movw  $02,ya
 09c2: 40        setp            ; +$100 to DP
@@ -326,8 +328,8 @@ TRACK_NOTE   = $0285
 09e6: d0 b9     bne   $09a1
 09e8: 5f f8 09  jmp   $09f8
 09eb: e8 00     mov   a,#$00
-09ed: d5 15 02  mov   $0215+x,a
-09f0: d5 05 02  mov   $0205+x,a
+09ed: d5 15 02  mov   PTRACK_HI+x,a
+09f0: d5 05 02  mov   PTRACK_LOW+x,a
 09f3: 3d        inc   x
 09f4: c8 10     cmp   x,#$10
 09f6: d0 f3     bne   $09eb
@@ -362,10 +364,10 @@ TRACK_NOTE   = $0285
 0a31: c4 16     mov   $16,a
 0a33: c4 6d     mov   $6d,a
 0a35: cd 0f     mov   x,#$0f
-0a37: f5 15 02  mov   a,$0215+x
+0a37: f5 15 02  mov   a,PTRACK_HI+x
 0a3a: f0 0b     beq   $0a47
 0a3c: 3f 72 0a  call  $0a72
-0a3f: f5 15 02  mov   a,$0215+x
+0a3f: f5 15 02  mov   a,PTRACK_HI+x
 0a42: f0 03     beq   $0a47
 0a44: 8f ff 16  mov   $16,#$ff
 0a47: 1d        dec   x
@@ -396,7 +398,7 @@ TRACK_NOTE   = $0285
 0a7d: 4d        push  x
 0a7e: 3f ab 18  call  $18ab
 0a81: ce        pop   x
-0a82: f5 15 02  mov   a,$0215+x
+0a82: f5 15 02  mov   a,PTRACK_HI+x
 0a85: f0 05     beq   $0a8c
 0a87: f5 25 02  mov   a,TRACK_TICKS+x
 0a8a: f0 f1     beq   $0a7d
@@ -2778,10 +2780,11 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1b1d: ce        pop   x
 1b1e: 6f        ret
 
+ResetTrack:  ; How do we get here?
 1b1f: ce        pop   x
 1b20: e8 00     mov   a,#$00
-1b22: d5 15 02  mov   $0215+x,a
-1b25: d5 05 02  mov   $0205+x,a
+1b22: d5 15 02  mov   PTRACK_HI+x,a
+1b25: d5 05 02  mov   PTRACK_LOW+x,a
 1b28: 6f        ret
 
 1b29: ce        pop   x
@@ -2890,7 +2893,7 @@ JUMPTBL_1BB1:
 1bdc: 6f        ret
 
 ;DP=$100!
-1bdd: 3f 9a 1c  call  $1c9a
+1bdd: 3f 9a 1c  call  LoadPtrackPtr
 1be0: f7 00     mov   a,($00)+y
 1be2: fc        inc   y
 1be3: 17 00     or    a,($00)+y
@@ -2907,7 +2910,7 @@ JUMPTBL_1BB1:
 1bf8: 3f a7 1c  call  $1ca7
 1bfb: 6f        ret
 
-1bfc: 3f 9a 1c  call  $1c9a
+1bfc: 3f 9a 1c  call  LoadPtrackPtr
 1bff: f7 00     mov   a,($00)+y
 1c01: fc        inc   y
 1c02: 2d        push  a
@@ -2915,7 +2918,7 @@ JUMPTBL_1BB1:
 1c06: ae        pop   a
 1c07: 6f        ret
 
-1c08: 3f 9a 1c  call  $1c9a
+1c08: 3f 9a 1c  call  LoadPtrackPtr
 1c0b: f4 16     mov   a,$16+x
 1c0d: d0 0e     bne   $1c1d
 1c0f: f7 00     mov   a,($00)+y
@@ -2934,7 +2937,8 @@ JUMPTBL_1BB1:
 1c29: 9b 16     dec   OUTPUT_CHAN+x
 1c2b: 6f        ret
 
-1c2c: 3f 9a 1c  call  $1c9a
+ProcCMDBuf:  ; This seems to call unpacker and dispatch VCMD
+1c2c: 3f 9a 1c  call  LoadPtrackPtr  ; L=$00 H=$01
 1c2f: f4 26     mov   a,CMDS_LEFT+x
 1c31: 10 18     bpl   $1c4b
 1c33: f7 00     mov   a,($00)+y
@@ -2951,7 +2955,6 @@ JUMPTBL_1BB1:
 1c46: 60        clrc
 1c47: a4 02     sbc   a,$02
 1c49: d4 46     mov   TRACK_PTR+x,a
-
 1c4b: 3f a7 1c  call  $1ca7
 1c4e: f4 66     mov   a,BUF_BASE_LOW+x
 1c50: c4 02     mov   $02,a
@@ -2973,10 +2976,11 @@ JUMPTBL_1BB1:
 1c6e: 10 04     bpl   $1c74
 1c70: e8 02     mov   a,#$02
 1c72: d4 06     mov   $06+x,a
+
 1c74: e4 04     mov   a,$04
 1c76: 6f        ret
 
-1c77: 3f 9a 1c  call  $1c9a
+1c77: 3f 9a 1c  call  LoadPtrackPtr
 1c7a: e8 02     mov   a,#$02
 1c7c: d4 06     mov   $06+x,a
 1c7e: f4 66     mov   a,BUF_BASE_LOW+x
@@ -2995,9 +2999,10 @@ JUMPTBL_1BB1:
 1c97: d7 02     mov   ($02)+y,a
 1c99: 6f        ret
 
-1c9a: f5 05 02  mov   a,$0205+x
+LoadPtrackPtr:
+1c9a: f5 05 02  mov   a,PTRACK_LOW+x
 1c9d: c4 00     mov   $00,a
-1c9f: f5 15 02  mov   a,$0215+x
+1c9f: f5 15 02  mov   a,PTRACK_HI+x
 1ca2: c4 01     mov   $01,a
 1ca4: 8d 00     mov   y,#$00
 1ca6: 6f        ret
@@ -3005,10 +3010,10 @@ JUMPTBL_1BB1:
 1ca7: 60        clrc
 1ca8: dd        mov   a,y
 1ca9: 84 00     adc   a,$00
-1cab: d5 05 02  mov   $0205+x,a
+1cab: d5 05 02  mov   PTRACK_LOW+x,a
 1cae: e8 00     mov   a,#$00
 1cb0: 84 01     adc   a,$01
-1cb2: d5 15 02  mov   $0215+x,a
+1cb2: d5 15 02  mov   PTRACK_HI+x,a
 1cb5: 6f        ret
 
 1cb6: f8 6d     mov   x,$6d
