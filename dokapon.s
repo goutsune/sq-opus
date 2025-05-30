@@ -54,11 +54,28 @@ DSP_C6	    = $6f
 DSP_C7 	    = $7f
 
 ; Work area defines
+;; Sequencer zero page
+PAN     = $41  ; Not sure
+NOTE    = $49
 
-;; Sequencer engine
+;; Unpacker zero page (at $100)
+UNPACKER_06  = $06  ; Seems to correlate with verb
+OUTPUT_CHAN  = $16  ;
+CMDS_LEFT    = $26  ;
+UNPACK_VERB  = $36  ; Seems to be the last unpacker cmd
+TRACK_PTR    = $46  ; Offset to fetch cmd, wrapped every $20
+UNPACK_HEAD  = $56  ; Wrapped over $20
+BUF_BASE_LOW = $66  ;
+BUF_BASE_HI  = $76  ;
+
+;; Work area
+TRACK_TICKS  = $0225
 TRACK_NUM    = $0235
-OUTPUT_CHAN  = $0265
-NOTE_NUM     = $0285
+TRACK_STATE  = $0255  ; Seems to reflect KON/KOF
+TRACK_INST   = $0265
+NOTE_LEN     = $0275  ; Not sure
+TRACK_NOTE   = $0285
+
 
 0800: 00        nop
 0801: 22 00     set1  $00
@@ -290,19 +307,19 @@ NOTE_NUM     = $0285
 09bb: d5 05 02  mov   $0205+x,a
 09be: 7a 04     addw  ya,$04
 09c0: da 02     movw  $02,ya
-09c2: 40        setp
+09c2: 40        setp            ; +$100 to DP
 09c3: e8 00     mov   a,#$00
-09c5: d4 06     mov   $06+x,a
-09c7: d4 16     mov   $16+x,a
-09c9: d4 26     mov   $26+x,a
-09cb: d4 36     mov   $36+x,a
+09c5: d4 06     mov   UNPACKER_06+x,a  ; $106
+09c7: d4 16     mov   OUTPUT_CHAN+x,a  ; $116
+09c9: d4 26     mov   CMDS_LEFT+x,a    ; $126
+09cb: d4 36     mov   UNPACK_VERB+x,a  ; $136
 09cd: 20        clrp
 09ce: d5 45 02  mov   $0245+x,a
-09d1: d5 35 02  mov   $0235+x,a
-09d4: d5 55 02  mov   $0255+x,a
-09d7: d5 25 02  mov   $0225+x,a
-09da: d5 75 02  mov   $0275+x,a
-09dd: d5 85 02  mov   $0285+x,a
+09d1: d5 35 02  mov   TRACK_NUM+x,a
+09d4: d5 55 02  mov   TRACK_STATE+x,a
+09d7: d5 25 02  mov   TRACK_TICKS+x,a
+09da: d5 75 02  mov   NOTE_LEN+x,a
+09dd: d5 85 02  mov   TRACK_NOTE+x,a
 09e0: d5 95 02  mov   $0295+x,a
 09e3: 3d        inc   x
 09e4: c8 10     cmp   x,#$10
@@ -371,17 +388,17 @@ NOTE_NUM     = $0285
 0a6e: 3f 9d 0a  call  $0a9d
 0a71: 6f        ret
 
-0a72: f5 25 02  mov   a,$0225+x
+0a72: f5 25 02  mov   a,TRACK_TICKS+x
 0a75: f0 06     beq   $0a7d
 0a77: 9c        dec   a
-0a78: d5 25 02  mov   $0225+x,a
+0a78: d5 25 02  mov   TRACK_TICKS+x,a
 0a7b: d0 0f     bne   $0a8c
 0a7d: 4d        push  x
 0a7e: 3f ab 18  call  $18ab
 0a81: ce        pop   x
 0a82: f5 15 02  mov   a,$0215+x
 0a85: f0 05     beq   $0a8c
-0a87: f5 25 02  mov   a,$0225+x
+0a87: f5 25 02  mov   a,TRACK_TICKS+x
 0a8a: f0 f1     beq   $0a7d
 0a8c: 6f        ret
 
@@ -2416,11 +2433,11 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 18a9: ee        pop   y
 18aa: 6f        ret
 
-18ab: f5 55 02  mov   a,$0255+x
+18ab: f5 55 02  mov   a,TRACK_STATE+x
 18ae: f0 0c     beq   $18bc
 18b0: c4 00     mov   $00,a
 18b2: e8 00     mov   a,#$00
-18b4: d5 55 02  mov   $0255+x,a
+18b4: d5 55 02  mov   TRACK_STATE+x,a
 18b7: e4 00     mov   a,$00
 18b9: 5f c1 18  jmp   $18c1
 18bc: 3f a8 1b  call  $1ba8
@@ -2448,15 +2465,15 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 18e2: 90 02     bcc   $18e6
 18e4: 08 e0     or    a,#$e0
 18e6: 60        clrc
-18e7: 95 85 02  adc   a,$0285+x
-18ea: d5 85 02  mov   $0285+x,a
+18e7: 95 85 02  adc   a,TRACK_NOTE+x
+18ea: d5 85 02  mov   TRACK_NOTE+x,a
 18ed: c4 02     mov   $02,a
-18ef: f5 35 02  mov   a,$0235+x
+18ef: f5 35 02  mov   a,TRACK_NUM+x
 18f2: c4 00     mov   $00,a
 18f4: 4d        push  x
 18f5: 3f 94 0a  call  $0a94
 18f8: ce        pop   x
-18f9: f5 65 02  mov   a,$0265+x
+18f9: f5 65 02  mov   a,TRACK_INST+x
 18fc: c4 04     mov   $04,a
 18fe: 3f b6 1c  call  $1cb6
 1901: 6f        ret
@@ -2468,10 +2485,10 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1909: 90 02     bcc   $190d
 190b: 08 e0     or    a,#$e0
 190d: 60        clrc
-190e: 95 85 02  adc   a,$0285+x
-1911: d5 85 02  mov   $0285+x,a
+190e: 95 85 02  adc   a,TRACK_NOTE+x
+1911: d5 85 02  mov   TRACK_NOTE+x,a
 1914: c4 02     mov   $02,a
-1916: f5 35 02  mov   a,$0235+x
+1916: f5 35 02  mov   a,TRACK_NUM+x
 1919: c4 00     mov   $00,a
 191b: 3f bf 1d  call  $1dbf
 191e: 6f        ret
@@ -2480,35 +2497,35 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1920: e4 00     mov   a,$00
 1922: 28 1f     and   a,#$1f
 1924: bc        inc   a
-1925: d5 25 02  mov   $0225+x,a
-1928: d5 75 02  mov   $0275+x,a
+1925: d5 25 02  mov   TRACK_TICKS+x,a
+1928: d5 75 02  mov   NOTE_LEN+x,a
 192b: 6f        ret
 
 192c: ce        pop   x
 192d: e4 00     mov   a,$00
 192f: 28 1f     and   a,#$1f
 1931: bc        inc   a
-1932: d5 25 02  mov   $0225+x,a
+1932: d5 25 02  mov   TRACK_TICKS+x,a
 1935: e8 20     mov   a,#$20
-1937: d5 55 02  mov   $0255+x,a
+1937: d5 55 02  mov   TRACK_STATE+x,a
 193a: 6f        ret
 
 193b: ce        pop   x
-193c: f5 75 02  mov   a,$0275+x
-193f: d5 25 02  mov   $0225+x,a
+193c: f5 75 02  mov   a,NOTE_LEN+x
+193f: d5 25 02  mov   TRACK_TICKS+x,a
 1942: e4 00     mov   a,$00
 1944: 28 1f     and   a,#$1f
 1946: 08 20     or    a,#$20
-1948: d5 55 02  mov   $0255+x,a
+1948: d5 55 02  mov   TRACK_STATE+x,a
 194b: 6f        ret
 
 194c: ce        pop   x
-194d: f5 75 02  mov   a,$0275+x
-1950: d5 25 02  mov   $0225+x,a
+194d: f5 75 02  mov   a,NOTE_LEN+x
+1950: d5 25 02  mov   TRACK_TICKS+x,a
 1953: e4 00     mov   a,$00
 1955: 28 1f     and   a,#$1f
 1957: 08 a0     or    a,#$a0
-1959: d5 55 02  mov   $0255+x,a
+1959: d5 55 02  mov   TRACK_STATE+x,a
 195c: 6f        ret
 
 195d: ce        pop   x
@@ -2522,11 +2539,12 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 196c: d5 95 02  mov   $0295+x,a
 196f: 08 80     or    a,#$80
 1971: c4 04     mov   $04,a
-1973: f5 35 02  mov   a,$0235+x
+1973: f5 35 02  mov   a,TRACK_NUM+x
 1976: 5d        mov   x,a
 1977: e4 04     mov   a,$04
 1979: d5 6f 03  mov   $036f+x,a
 197c: 6f        ret
+
 197d: e4 00     mov   a,$00
 197f: 28 1f     and   a,#$1f
 1981: 68 18     cmp   a,#$18
@@ -2566,7 +2584,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 19bf: ce        pop   x
 19c0: 3f a8 1b  call  $1ba8
 19c3: c4 04     mov   $04,a
-19c5: f5 35 02  mov   a,$0235+x
+19c5: f5 35 02  mov   a,TRACK_NUM+x
 19c8: 5d        mov   x,a
 19c9: e4 04     mov   a,$04
 19cb: d5 af 02  mov   $02af+x,a
@@ -2575,7 +2593,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 19cf: ce        pop   x
 19d0: 3f a8 1b  call  $1ba8
 19d3: c4 04     mov   $04,a
-19d5: f5 35 02  mov   a,$0235+x
+19d5: f5 35 02  mov   a,TRACK_NUM+x
 19d8: 5d        mov   x,a
 19d9: f5 df 02  mov   a,$02df+x
 19dc: f0 3d     beq   $1a1b
@@ -2639,7 +2657,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1a36: ce        pop   x
 1a37: 3f a8 1b  call  $1ba8
 1a3a: c4 04     mov   $04,a
-1a3c: f5 35 02  mov   a,$0235+x
+1a3c: f5 35 02  mov   a,TRACK_NUM+x
 1a3f: 5d        mov   x,a
 1a40: e4 04     mov   a,$04
 1a42: d5 ef 02  mov   $02ef+x,a
@@ -2648,7 +2666,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1a46: ce        pop   x
 1a47: 3f a8 1b  call  $1ba8
 1a4a: c4 04     mov   $04,a
-1a4c: f5 35 02  mov   a,$0235+x
+1a4c: f5 35 02  mov   a,TRACK_NUM+x
 1a4f: 5d        mov   x,a
 1a50: e4 04     mov   a,$04
 1a52: d5 1f 03  mov   $031f+x,a
@@ -2657,7 +2675,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1a56: ce        pop   x
 1a57: 3f a8 1b  call  $1ba8
 1a5a: c4 04     mov   $04,a
-1a5c: f5 35 02  mov   a,$0235+x
+1a5c: f5 35 02  mov   a,TRACK_NUM+x
 1a5f: 5d        mov   x,a
 1a60: e4 04     mov   a,$04
 1a62: d5 2f 03  mov   $032f+x,a
@@ -2666,7 +2684,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1a66: ce        pop   x
 1a67: 3f a8 1b  call  $1ba8
 1a6a: c4 04     mov   $04,a
-1a6c: f5 35 02  mov   a,$0235+x
+1a6c: f5 35 02  mov   a,TRACK_NUM+x
 1a6f: 5d        mov   x,a
 1a70: e4 04     mov   a,$04
 1a72: d5 3f 03  mov   $033f+x,a
@@ -2685,14 +2703,14 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1a8c: ce        pop   x
 1a8d: 3f a8 1b  call  $1ba8
 1a90: c4 04     mov   $04,a
-1a92: f5 35 02  mov   a,$0235+x
+1a92: f5 35 02  mov   a,TRACK_NUM+x
 1a95: 5d        mov   x,a
 1a96: e4 04     mov   a,$04
 1a98: d5 df 02  mov   $02df+x,a
 1a9b: 6f        ret
 
 1a9c: ce        pop   x
-1a9d: f5 35 02  mov   a,$0235+x
+1a9d: f5 35 02  mov   a,TRACK_NUM+x
 1aa0: 5d        mov   x,a
 1aa1: e8 00     mov   a,#$00
 1aa3: d5 3f 03  mov   $033f+x,a
@@ -2709,7 +2727,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1abc: ce        pop   x
 1abd: e4 3c     mov   a,$3c
 1abf: c4 08     mov   $08,a
-1ac1: f5 35 02  mov   a,$0235+x
+1ac1: f5 35 02  mov   a,TRACK_NUM+x
 1ac4: c4 00     mov   $00,a
 1ac6: cd 07     mov   x,#$07
 1ac8: 8d 00     mov   y,#$00
@@ -2746,7 +2764,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1b05: ce        pop   x
 1b06: 3f a8 1b  call  $1ba8
 1b09: c4 02     mov   $02,a
-1b0b: f5 35 02  mov   a,$0235+x
+1b0b: f5 35 02  mov   a,TRACK_NUM+x
 1b0e: 5d        mov   x,a
 1b0f: e4 02     mov   a,$02
 1b11: 3f f6 0d  call  $0df6
@@ -2768,48 +2786,48 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 
 1b29: ce        pop   x
 1b2a: 3f a8 1b  call  $1ba8
-1b2d: d5 35 02  mov   $0235+x,a
+1b2d: d5 35 02  mov   TRACK_NUM+x,a
 1b30: 6f        ret
 
 1b31: ce        pop   x
 1b32: 3f a8 1b  call  $1ba8
-1b35: d5 85 02  mov   $0285+x,a
+1b35: d5 85 02  mov   TRACK_NOTE+x,a
 1b38: c4 02     mov   $02,a
-1b3a: f5 35 02  mov   a,$0235+x
+1b3a: f5 35 02  mov   a,TRACK_NUM+x
 1b3d: c4 00     mov   $00,a
 1b3f: 4d        push  x
 1b40: 3f 94 0a  call  $0a94
 1b43: ce        pop   x
-1b44: f5 65 02  mov   a,$0265+x
+1b44: f5 65 02  mov   a,TRACK_INST+x
 1b47: c4 04     mov   $04,a
 1b49: 3f b6 1c  call  $1cb6
 1b4c: 6f        ret
 
 1b4d: ce        pop   x
 1b4e: 3f a8 1b  call  $1ba8
-1b51: d5 85 02  mov   $0285+x,a
+1b51: d5 85 02  mov   TRACK_NOTE+x,a
 1b54: c4 02     mov   $02,a
-1b56: f5 35 02  mov   a,$0235+x
+1b56: f5 35 02  mov   a,TRACK_NUM+x
 1b59: c4 00     mov   $00,a
 1b5b: 3f bf 1d  call  $1dbf
 1b5e: 6f        ret
 
 1b5f: ce        pop   x
 1b60: 3f a8 1b  call  $1ba8
-1b63: d5 85 02  mov   $0285+x,a
-1b66: f5 75 02  mov   a,$0275+x
-1b69: d5 25 02  mov   $0225+x,a
+1b63: d5 85 02  mov   TRACK_NOTE+x,a
+1b66: f5 75 02  mov   a,NOTE_LEN+x
+1b69: d5 25 02  mov   TRACK_TICKS+x,a
 1b6c: e8 20     mov   a,#$20
-1b6e: d5 55 02  mov   $0255+x,a
+1b6e: d5 55 02  mov   TRACK_STATE+x,a
 1b71: 6f        ret
 
 1b72: ce        pop   x
 1b73: 3f a8 1b  call  $1ba8
 1b76: d5 95 02  mov   $0295+x,a
-1b79: f5 75 02  mov   a,$0275+x
-1b7c: d5 25 02  mov   $0225+x,a
+1b79: f5 75 02  mov   a,NOTE_LEN+x
+1b7c: d5 25 02  mov   TRACK_TICKS+x,a
 1b7f: e8 a0     mov   a,#$a0
-1b81: d5 55 02  mov   $0255+x,a
+1b81: d5 55 02  mov   TRACK_STATE+x,a
 1b84: 6f        ret
 
 1b85: ce        pop   x
@@ -2820,7 +2838,7 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 1b8b: d5 95 02  mov   $0295+x,a
 1b8e: 08 80     or    a,#$80
 1b90: 2d        push  a
-1b91: f5 35 02  mov   a,$0235+x
+1b91: f5 35 02  mov   a,TRACK_NUM+x
 1b94: 5d        mov   x,a
 1b95: ae        pop   a
 1b96: d5 6f 03  mov   $036f+x,a
@@ -2828,12 +2846,12 @@ FetchCMD:  ; I assume this is VCMD fetch loop
 
 1b9a: ce        pop   x
 1b9b: e8 ff     mov   a,#$ff
-1b9d: d5 25 02  mov   $0225+x,a
+1b9d: d5 25 02  mov   TRACK_TICKS+x,a
 1ba0: 6f        ret
 
 1ba1: ce        pop   x
 1ba2: 28 07     and   a,#$07
-1ba4: d5 65 02  mov   $0265+x,a
+1ba4: d5 65 02  mov   TRACK_INST+x,a
 1ba7: 6f        ret
 
 JUMPTBL_1BB1:
@@ -2881,7 +2899,7 @@ JUMPTBL_1BB1:
 1be8: e8 02     mov   a,#$02
 1bea: d4 06     mov   $06+x,a
 1bec: e8 00     mov   a,#$00
-1bee: d4 56     mov   $56+x,a
+1bee: d4 56     mov   UNPACK_HEAD+x,a
 1bf0: 5f f8 1b  jmp   $1bf8
 1bf3: fc        inc   y
 1bf4: e8 01     mov   a,#$01
@@ -2903,21 +2921,21 @@ JUMPTBL_1BB1:
 1c0f: f7 00     mov   a,($00)+y
 1c11: fc        inc   y
 1c12: 48 ff     eor   a,#$ff
-1c14: d4 36     mov   $36+x,a
+1c14: d4 36     mov   UNPACK_VERB+x,a
 1c16: e8 08     mov   a,#$08
-1c18: d4 16     mov   $16+x,a
+1c18: d4 16     mov   OUTPUT_CHAN+x,a
 1c1a: 3f a7 1c  call  $1ca7
-1c1d: 1b 36     asl   $36+x
+1c1d: 1b 36     asl   UNPACK_VERB+x
 1c1f: e8 00     mov   a,#$00
 1c21: 88 03     adc   a,#$03
 1c23: d4 06     mov   $06+x,a
 1c25: e8 ff     mov   a,#$ff
-1c27: d4 26     mov   $26+x,a
-1c29: 9b 16     dec   $16+x
+1c27: d4 26     mov   CMDS_LEFT+x,a
+1c29: 9b 16     dec   OUTPUT_CHAN+x
 1c2b: 6f        ret
 
 1c2c: 3f 9a 1c  call  $1c9a
-1c2f: f4 26     mov   a,$26+x
+1c2f: f4 26     mov   a,CMDS_LEFT+x
 1c31: 10 18     bpl   $1c4b
 1c33: f7 00     mov   a,($00)+y
 1c35: fc        inc   y
@@ -2927,30 +2945,31 @@ JUMPTBL_1BB1:
 1c3a: 28 07     and   a,#$07
 1c3c: 60        clrc
 1c3d: 88 02     adc   a,#$02
-1c3f: d4 26     mov   $26+x,a
+1c3f: d4 26     mov   CMDS_LEFT+x,a
 1c41: 38 1f 02  and   $02,#$1f
-1c44: f4 56     mov   a,$56+x
+1c44: f4 56     mov   a,UNPACK_HEAD+x
 1c46: 60        clrc
 1c47: a4 02     sbc   a,$02
-1c49: d4 46     mov   $46+x,a
+1c49: d4 46     mov   TRACK_PTR+x,a
+
 1c4b: 3f a7 1c  call  $1ca7
-1c4e: f4 66     mov   a,$66+x
+1c4e: f4 66     mov   a,BUF_BASE_LOW+x
 1c50: c4 02     mov   $02,a
-1c52: f4 76     mov   a,$76+x
+1c52: f4 76     mov   a,BUF_BASE_HI+x
 1c54: c4 03     mov   $03,a
-1c56: f4 46     mov   a,$46+x
-1c58: bb 46     inc   $46+x
+1c56: f4 46     mov   a,TRACK_PTR+x
+1c58: bb 46     inc   TRACK_PTR+x
 1c5a: 28 1f     and   a,#$1f
 1c5c: fd        mov   y,a
 1c5d: f7 02     mov   a,($02)+y
 1c5f: c4 04     mov   $04,a
-1c61: f4 56     mov   a,$56+x
-1c63: bb 56     inc   $56+x
+1c61: f4 56     mov   a,UNPACK_HEAD+x
+1c63: bb 56     inc   UNPACK_HEAD+x
 1c65: 28 1f     and   a,#$1f
 1c67: fd        mov   y,a
 1c68: e4 04     mov   a,$04
 1c6a: d7 02     mov   ($02)+y,a
-1c6c: 9b 26     dec   $26+x
+1c6c: 9b 26     dec   CMDS_LEFT+x
 1c6e: 10 04     bpl   $1c74
 1c70: e8 02     mov   a,#$02
 1c72: d4 06     mov   $06+x,a
@@ -2960,16 +2979,16 @@ JUMPTBL_1BB1:
 1c77: 3f 9a 1c  call  $1c9a
 1c7a: e8 02     mov   a,#$02
 1c7c: d4 06     mov   $06+x,a
-1c7e: f4 66     mov   a,$66+x
+1c7e: f4 66     mov   a,BUF_BASE_LOW+x
 1c80: c4 02     mov   $02,a
-1c82: f4 76     mov   a,$76+x
+1c82: f4 76     mov   a,BUF_BASE_HI+x
 1c84: c4 03     mov   $03,a
 1c86: f7 00     mov   a,($00)+y
 1c88: fc        inc   y
 1c89: c4 04     mov   $04,a
 1c8b: 3f a7 1c  call  $1ca7
-1c8e: f4 56     mov   a,$56+x
-1c90: bb 56     inc   $56+x
+1c8e: f4 56     mov   a,UNPACK_HEAD+x
+1c90: bb 56     inc   UNPACK_HEAD+x
 1c92: 28 1f     and   a,#$1f
 1c94: fd        mov   y,a
 1c95: e4 04     mov   a,$04
@@ -3214,12 +3233,12 @@ JUMPTBL_1BB1:
 1e58: 7d        mov   a,x
 1e59: 9f        xcn   a
 1e5a: 1c        asl   a
-1e5b: d4 66     mov   $66+x,a
+1e5b: d4 66     mov   BUF_BASE_LOW+x,a
 1e5d: 3c        rol   a
 1e5e: 28 01     and   a,#$01
 1e60: 60        clrc
 1e61: 88 06     adc   a,#$06
-1e63: d4 76     mov   $76+x,a
+1e63: d4 76     mov   BUF_BASE_HI+x,a
 1e65: 1d        dec   x
 1e66: 10 f0     bpl   $1e58
 1e68: 20        clrp
